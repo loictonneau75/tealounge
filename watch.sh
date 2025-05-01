@@ -1,0 +1,1 @@
+./dart-sass/dart-sass-macos/sass scss/style.scss css/style.css --watch

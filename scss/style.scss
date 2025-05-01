@@ -1,0 +1,11 @@
+@import "./bootstrap/functions";
+@import "./bootstrap/variables.scss";
+
+$custom-colors: (
+    "firstcolor": #f4c4b4,
+);
+
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+
+@import "bootstrap/bootstrap.scss";
