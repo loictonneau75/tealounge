@@ -1,6 +1,13 @@
 @import "./bootstrap/functions";
 @import "./bootstrap/variables.scss";
 
+@font-face {
+    font-family: "Osake";
+    src: url(../font/Osake.otf) format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+
 $custom-colors: (
     "firstcolor": #88A58F,
     "secondcolor": #a1bd8d
@@ -11,7 +18,7 @@ $custom-display-font-size:(
     custom: 7rem
 );
 $display-font-sizes: map-merge($display-font-sizes, $custom-display-font-size);
-
+$display-font-family: "Osake";
 
 
 body{
