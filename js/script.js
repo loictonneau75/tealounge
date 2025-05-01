@@ -6,14 +6,21 @@ function setupDoc(sitename){
 };
 
 function createPage(title){
-    document.body.append(createCustomElement({tag: "h1", innerText: title, classList: ["text-center", "display-custom"]}))
-    
+    const h1 = createCustomElement({tag: "h1", innerText: title, classList: ["text-center", "display-custom"]})
+    const form = null
+
+    const formWrapper = createCustomElement({tag: "div", classList: ["container", "bg-secondcolor", "p-5", "my-5"]})
+    formWrapper.append(h1, form)
+
+    const MainWrapper = document.createElement("div")
+    MainWrapper.append(formWrapper)
+    return MainWrapper
 };
 
 window.onload = () => {
     getConfigValue("siteName").then(sitename => {
         setupDoc(sitename);
-        createPage(sitename);
+        document.body.append(createPage(sitename));
     })
     
 };
