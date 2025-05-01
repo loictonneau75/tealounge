@@ -2,7 +2,8 @@
 @import "./bootstrap/variables.scss";
 
 $custom-colors: (
-    "firstcolor": #f4c4b4,
+    "firstcolor": #88A58F,
+    "secondcolor": #a1bd8d
 );
 
 $theme-colors: map-merge($theme-colors, $custom-colors);
