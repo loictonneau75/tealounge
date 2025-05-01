@@ -7,6 +7,13 @@ $custom-colors: (
 );
 $theme-colors: map-merge($theme-colors, $custom-colors);
 
+$custom-display-font-size:(
+    custom: 7rem
+);
+$display-font-sizes: map-merge($display-font-sizes, $custom-display-font-size);
+
+
+
 body{
     background: {
         image: url("../img/6b60e56eadc2fe9793a5d6dbe1e07b5a.jpg");

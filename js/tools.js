@@ -8,3 +8,20 @@ export async function getConfigValue(key) {
         return null
     }
 };
+
+function requiredParam(paramName){
+    throw new Error(`l'Argument "${paramName}" est requis`);
+};
+
+export function createCustomElement({
+    tag = requiredParam("name"), 
+    innerText = null,
+    classList = null}){
+    const element = document.createElement(tag)
+    
+    if(innerText){element.innerText = innerText}
+    
+    element.classList.add(...(classList || []));
+
+    return element;
+};
