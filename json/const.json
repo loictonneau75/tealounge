@@ -1,4 +1,14 @@
 {
     "siteName": "Tea Loundge",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "form":{
+        "fields":{
+            "name": {
+                "value": "name",
+                "id": "nameId"
+            }
+
+        }
+    }
+
 }
