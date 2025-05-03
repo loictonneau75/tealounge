@@ -21,8 +21,8 @@ export class TeaForm{
                         tools.createInputWithOptions(
                             field.id, label, placeholder,
                             (wrapper, options, id, placeholder, otherId) => 
-                                tools.oneChoice(wrapper, options, id, placeholder, otherId),
-                            field.storageKey,field.otherId,//todo ajouter required
+                                tools.oneChoice(wrapper, options, id, placeholder, otherId, field.required),
+                            field.storageKey,field.otherId
                         )
                     )
                 }else if(field.choiceId){
@@ -30,8 +30,8 @@ export class TeaForm{
                         tools.createInputWithOptions(
                             field.id, label,  placeholder, 
                             (wrapper, options, id, placeholder) => 
-                                tools.multipleChoice(wrapper, options, id, placeholder, formConfig.UILabels[this.lang].add), 
-                            field.storageKey//todo ajouter required
+                                tools.multipleChoice(wrapper, options, id, placeholder, formConfig.UILabels[this.lang].add, field.required),
+                            field.storageKey
                         )
                     )
                 }else if(field.textarea){

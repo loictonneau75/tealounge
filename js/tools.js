@@ -23,17 +23,18 @@ function capitalize(s){
     return String(s[0]).toUpperCase() + String(s).slice(1);
 }
 
-function finalizeSelection(input,wrapper, state, selected, otherInput){
+function finalizeSelection(input,wrapper, state, selected, otherInput, required){
     const isOtherSelected = selected === "autre";
     input.value = selected;
     wrapper.innerHTML = "";
     state.currentIndex = -1;
     if (otherInput) {
         otherInput.classList.toggle("d-none", !isOtherSelected);
+        if(isOtherSelected){otherInput.required = required}
     }
 }
 
-function handleKeyboardNavigation(input, wrapper, otherInput,state){
+function handleKeyboardNavigation(input, wrapper, otherInput,state, required){
     input.addEventListener("keydown", event => {
         const items = wrapper.querySelectorAll(".suggestion-item");
         if (!items.length) {return};
@@ -55,7 +56,7 @@ function handleKeyboardNavigation(input, wrapper, otherInput,state){
         
         else if (event.key === "Enter") {
             event.preventDefault();
-            if (state.currentIndex >= 0) {finalizeSelection(input, wrapper, state, items[state.currentIndex].textContent, otherInput)}
+            if (state.currentIndex >= 0) {finalizeSelection(input, wrapper, state, items[state.currentIndex].textContent, otherInput, required)}
         } 
         
         else if (event.key === "Escape") {
@@ -71,19 +72,19 @@ function hideSuggestionsOnBlur(input, wrapper){
     });
 }
 
-function handleSuggestionClick(input, wrapper, otherInput, state){
+function handleSuggestionClick(input, wrapper, otherInput, state, required){
     wrapper.addEventListener("click", event => {
         if (event.target.classList.contains("suggestion-item")) {
-            finalizeSelection(input, wrapper, state, event.target.textContent, otherInput)
+            finalizeSelection(input, wrapper, state, event.target.textContent, otherInput, required)
         }
     });
 }
 
-function setupKeyboard({input, wrapper, otherInput}){
+function setupKeyboard({input, wrapper, otherInput, required}){
     const state = { currentIndex: -1 };
-    handleKeyboardNavigation(input, wrapper, otherInput, state)
+    handleKeyboardNavigation(input, wrapper, otherInput, state, required)
     hideSuggestionsOnBlur(input, wrapper)
-    handleSuggestionClick(input, wrapper, otherInput, state)
+    handleSuggestionClick(input, wrapper, otherInput, state, required)
 
 }
 
@@ -130,14 +131,8 @@ export function createRowWithColumns(contents){
 };
 
 export function createInputField(id, innerText, placeholder, required){
-    console.log(`createInputField() → Champ "${id}" est requis ?`, required);
-
     const label = createCustomElement({tag: "label", htmlFor: id, innerText, classList: ["form-label"]});
     const input = createCustomElement({tag: "input", id, type: "", placeholder, classList: ["form-control"], required});
-
-    // Vérification après création de l'élément
-    console.log(`Champ input[id="${id}"] → Attribut required appliqué ?`, input.required);
-
     const wrapper = createCustomElement({tag: "div", classList: ["form-group"]});
     wrapper.append(label, input);
     return wrapper;
@@ -170,8 +165,8 @@ function setupDropdownHandler(input, options, suggestionsWrapper){
     });
 }
 
-export function oneChoice(wrapper, options, id, placeholder,  otherId){
-    const input = createCustomElement({tag: "input", id, placeholder, classList: ["form-control"]});
+export function oneChoice(wrapper, options, id, placeholder,  otherId, required){
+    const input = createCustomElement({tag: "input", id, placeholder, classList: ["form-control"], required});
     wrapper.appendChild(input);
     if(options.length !== 0){
         const suggestionWrapper = createCustomElement({tag: "div", classList: ["list-group", "overflow-auto", "suggestion-scrollable"]})
@@ -179,7 +174,7 @@ export function oneChoice(wrapper, options, id, placeholder,  otherId){
         const otherInput = createCustomElement({tag: "input",id: otherId, placeholder, classList: ["form-control", "d-none"]});
         input.readOnly = "readOnly"
         setupDropdownHandler(input, ["autre", ...options], suggestionWrapper);
-        setupKeyboard({input, wrapper:suggestionWrapper, otherInput});
+        setupKeyboard({input, wrapper:suggestionWrapper, otherInput, required});
         wrapper.append(button, suggestionWrapper, otherInput);
     };
 };
@@ -232,19 +227,19 @@ function setupAddButton(button, selectedChoices, choiceWrapper, input, suggestio
     });
 }
 
-function bindChildRequiredValidation({input, container, message }) {
+function bindChildRequiredValidation({input, wrapper, message }) {
     const observer = new MutationObserver(() => {
-        if (container.children.length === 0) {
+        if (wrapper.children.length === 0) {
             input.setCustomValidity(message);
         } else {
-            input.setCustomValidity(""); // Champ redevenu valide
+            input.setCustomValidity("");
         }
     });
 
-    observer.observe(container, { childList: true });
+    observer.observe(wrapper, { childList: true });
 }
 
-export function multipleChoice(wrapper, options, id, placeholder, addLabel){
+export function multipleChoice(wrapper, options, id, placeholder, addLabel, required){
     const selectedChoices = [];
     const suggestionWrapper = createCustomElement({tag: "div", classList: ["list-group", "overflow-auto", "suggestion-scrollable"]});
     const choiceWrapper = createCustomElement({tag: "div", id:"ok"});
@@ -254,8 +249,9 @@ export function multipleChoice(wrapper, options, id, placeholder, addLabel){
     inputRow.append(input, button);
     wrapper.append(inputRow, suggestionWrapper, choiceWrapper);
     setupAutocompleteListener(input, options, selectedChoices, suggestionWrapper)
-    setupKeyboard({input, wrapper :suggestionWrapper})
+    setupKeyboard({input, wrapper :suggestionWrapper, required})
     setupAddButton(button, selectedChoices, choiceWrapper, input, suggestionWrapper)
+    if(required){bindChildRequiredValidation({input, wrapper: choiceWrapper, message: "veuillez ajouté au moins un ingredient"})}
 }
 
 export function createInputWithOptions(id, innerText, placeholder, callback, storageKey, otherId){
