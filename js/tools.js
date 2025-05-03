@@ -130,9 +130,14 @@ export function createRowWithColumns(contents){
 };
 
 export function createInputField(id, innerText, placeholder, required){
-    console.log(required)
+    console.log(`createInputField() → Champ "${id}" est requis ?`, required);
+
     const label = createCustomElement({tag: "label", htmlFor: id, innerText, classList: ["form-label"]});
     const input = createCustomElement({tag: "input", id, type: "", placeholder, classList: ["form-control"], required});
+
+    // Vérification après création de l'élément
+    console.log(`Champ input[id="${id}"] → Attribut required appliqué ?`, input.required);
+
     const wrapper = createCustomElement({tag: "div", classList: ["form-group"]});
     wrapper.append(label, input);
     return wrapper;
