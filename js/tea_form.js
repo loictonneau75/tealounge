@@ -21,8 +21,8 @@ export class TeaForm{
                         tools.createInputWithOptions(
                             field.id, label, placeholder,
                             (wrapper, options, id, placeholder, otherId) => 
-                                tools.oneChoice(wrapper, options, id, placeholder, otherId, field.required),
-                            field.storageKey,field.otherId
+                                tools.oneChoice(wrapper, options, id, placeholder, otherId),
+                            field.storageKey,field.otherId,//todo ajouter required
                         )
                     )
                 }else if(field.choiceId){
@@ -30,8 +30,8 @@ export class TeaForm{
                         tools.createInputWithOptions(
                             field.id, label,  placeholder, 
                             (wrapper, options, id, placeholder) => 
-                                tools.multipleChoice(wrapper, options, id, placeholder, formConfig.UILabels[this.lang].add, field.required), 
-                            field.storageKey
+                                tools.multipleChoice(wrapper, options, id, placeholder, formConfig.UILabels[this.lang].add), 
+                            field.storageKey//todo ajouter required
                         )
                     )
                 }else if(field.textarea){
@@ -46,6 +46,9 @@ export class TeaForm{
             }
             rows.push(tools.createRowWithColumns(row))
         });
+        console.log(formConfig.UILabels[this.lang].send)
+        const submitBtn = tools.createCustomElement({tag: "button", type:"submit", textContent: formConfig.UILabels[this.lang].send})
+        rows.push(tools.createRowWithColumns([submitBtn]))
         this.form.append(...rows)
         return this.form
     };

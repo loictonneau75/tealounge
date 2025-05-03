@@ -47,7 +47,7 @@
             "comment": {
                 "id": "commentId",
                 "textarea": 4,
-                "required": true,
+                "required": false,
                 "label": {
                     "fr": "Commentaire",
                     "en": "Comment"
@@ -57,11 +57,13 @@
         "UILabels":{
             "fr":{
                 "inputPrefix": "Entrez un",
-                "add": "Ajouter"
+                "add": "Ajouter",
+                "send": "Envoyer"
             },
             "en":{
                 "inputPrefix": "Type a",
-                "add": "Add"
+                "add": "Add",
+                "send": "Send"
             }
         }
     }

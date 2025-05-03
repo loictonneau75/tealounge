@@ -30,7 +30,6 @@ function finalizeSelection(input,wrapper, state, selected, otherInput){
     state.currentIndex = -1;
     if (otherInput) {
         otherInput.classList.toggle("d-none", !isOtherSelected);
-        otherInput.required = isOtherSelected;
     }
 }
 
@@ -131,6 +130,7 @@ export function createRowWithColumns(contents){
 };
 
 export function createInputField(id, innerText, placeholder, required){
+    console.log(required)
     const label = createCustomElement({tag: "label", htmlFor: id, innerText, classList: ["form-label"]});
     const input = createCustomElement({tag: "input", id, type: "", placeholder, classList: ["form-control"], required});
     const wrapper = createCustomElement({tag: "div", classList: ["form-group"]});
@@ -165,13 +165,13 @@ function setupDropdownHandler(input, options, suggestionsWrapper){
     });
 }
 
-export function oneChoice(wrapper, options, id, placeholder,  otherId, required){
-    const input = createCustomElement({tag: "input", id, placeholder, classList: ["form-control"], required});
+export function oneChoice(wrapper, options, id, placeholder,  otherId){
+    const input = createCustomElement({tag: "input", id, placeholder, classList: ["form-control"]});
     wrapper.appendChild(input);
     if(options.length !== 0){
         const suggestionWrapper = createCustomElement({tag: "div", classList: ["list-group", "overflow-auto", "suggestion-scrollable"]})
         const button = createCustomElement({tag: "div", classList: ["caret"]});
-        const otherInput = createCustomElement({tag: "input",id: otherId, placeholder, classList: ["form-control", "d-none"], required});
+        const otherInput = createCustomElement({tag: "input",id: otherId, placeholder, classList: ["form-control", "d-none"]});
         input.readOnly = "readOnly"
         setupDropdownHandler(input, ["autre", ...options], suggestionWrapper);
         setupKeyboard({input, wrapper:suggestionWrapper, otherInput});
@@ -239,7 +239,7 @@ function bindChildRequiredValidation({input, container, message }) {
     observer.observe(container, { childList: true });
 }
 
-export function multipleChoice(wrapper, options, id, placeholder, addLabel, required){
+export function multipleChoice(wrapper, options, id, placeholder, addLabel){
     const selectedChoices = [];
     const suggestionWrapper = createCustomElement({tag: "div", classList: ["list-group", "overflow-auto", "suggestion-scrollable"]});
     const choiceWrapper = createCustomElement({tag: "div", id:"ok"});
@@ -251,15 +251,13 @@ export function multipleChoice(wrapper, options, id, placeholder, addLabel, requ
     setupAutocompleteListener(input, options, selectedChoices, suggestionWrapper)
     setupKeyboard({input, wrapper :suggestionWrapper})
     setupAddButton(button, selectedChoices, choiceWrapper, input, suggestionWrapper)
-    if (required) {bindChildRequiredValidation({input, container: choiceWrapper, message: "Veuillez ajouter au moins 1 ingrédient."})}
-
 }
 
-export function createInputWithOptions(id, innerText, placeholder, callback, storageKey, otherId, required){
+export function createInputWithOptions(id, innerText, placeholder, callback, storageKey, otherId){
     const label = createCustomElement({tag: "label", htmlFor: id, innerText, classList: ["form-label"]});
     const option = getDataFromLocalStorage(storageKey);
     const wrapper = createCustomElement({tag: "div", classList: ["form-group", "position-relative"]});
     wrapper.appendChild(label);
-    callback(wrapper, option, id, placeholder, otherId, required);
+    callback(wrapper, option, id, placeholder, otherId);
     return wrapper;
 };
