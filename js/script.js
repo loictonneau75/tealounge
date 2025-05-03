@@ -8,7 +8,7 @@ function setupDoc(sitename){
 
 async function createPage(title){
     const h1 = createCustomElement({tag: "h1", innerText: title, classList: ["text-center", "display-custom"]});
-    const form = new TeaForm("en");
+    const form = new TeaForm("fr");
 
     const formWrapper = createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5", "my-5"]});
     formWrapper.append(h1, await form.build());

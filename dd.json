@@ -5,7 +5,6 @@
         "fields":[{
             "name": {
                 "id": "nameId",
-                "required": true,
                 "label": {
                     "fr": "Nom",
                     "en": "Name"
@@ -15,7 +14,6 @@
                 "id": "typeId",
                 "otherId": "otherTypeId",
                 "storageKey": "typesAvailable",
-                "required": true,
                 "label": {
                     "fr": "Type",
                     "en": "Type"
@@ -27,7 +25,6 @@
                 "id": "BrandId",
                 "otherId": "otherBrandId",
                 "storageKey": "BrandsAvailable",
-                "required": false,
                 "label": {
                     "fr": "Marque",
                     "en": "Brand"
@@ -35,22 +32,11 @@
             },
             "ingredient":{
                 "id": "ingredientId",
-                "choiceId": "chosenIngredientId",
+                "otherId": "otherIngredientId",
                 "storageKey": "ingredientsAvailable",
-                "required": true,
                 "label": {
                     "fr": "Ingrédient",
                     "en": "Ingredient"
-                }
-            }
-        },{
-            "comment": {
-                "id": "commentId",
-                "textarea": 4,
-                "required": true,
-                "label": {
-                    "fr": "Commentaire",
-                    "en": "Comment"
                 }
             }
         }],

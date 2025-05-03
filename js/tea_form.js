@@ -8,42 +8,45 @@ export class TeaForm{
 
     async build(){
         const formConfig = await tools.getConfigValue("form");
-        this.form.append(
-            tools.createRowWithColumns([
-                tools.createInputField(
-                    formConfig.fields.name.id, 
-                    `${formConfig.UILabels[this.lang].name} :`, 
-                    `${formConfig.UILabels[this.lang].inputPrefix} ${formConfig.UILabels[this.lang].name.toLowerCase()}`, 
-                    true
-                ),
-                tools.createInputWithOptions(
-                    formConfig.fields.type.id, 
-                    `${formConfig.UILabels[this.lang].type} :`, 
-                    `${formConfig.UILabels[this.lang].inputPrefix} ${formConfig.UILabels[this.lang].type.toLowerCase()}`,
-                    (wrapper, options, id, placeholder, required, otherId) => tools.oneChoice(wrapper, options, id, placeholder, required, otherId),
-                    formConfig.fields.type.storageKey,
-                    formConfig.fields.type.otherId
-                )
-            ]),
-            tools.createRowWithColumns([
-                tools.createInputWithOptions(
-                    formConfig.fields.brand.id,
-                    `${formConfig.UILabels[this.lang].brand} :`, 
-                    `${formConfig.UILabels[this.lang].inputPrefix} ${formConfig.UILabels[this.lang].brand.toLowerCase()}`,
-                    (wrapper, options, id, placeholder, required, otherId) => tools.oneChoice(wrapper, options, id, placeholder, required, otherId),
-                    formConfig.fields.brand.storageKey,
-                    formConfig.fields.brand.otherId
-                ),
-                tools.createInputWithOptions(
-                    formConfig.fields.ingredient.id,
-                    `${formConfig.UILabels[this.lang].ingredient} :`, 
-                    `${formConfig.UILabels[this.lang].inputPrefix} ${formConfig.UILabels[this.lang].ingredient.toLowerCase()}`,
-                    (wrapper, options, id, placeholder, required, otherId) => tools.multipleChoice(wrapper, options, id, placeholder, formConfig.UILabels[this.lang].add),
-                    formConfig.fields.ingredient.storageKey,
-                    formConfig.fields.ingredient.otherId
-                )  
-            ])
-        );
-        return this.form;
+        const rows = []
+        const fieldsrow = formConfig.fields;
+        fieldsrow.forEach(fields => {
+            const row = []
+            for (const fieldName in fields){
+                const field = fields[fieldName]
+                const label = `${field.label[this.lang]} :`
+                const placeholder = `${formConfig.UILabels[this.lang].inputPrefix} ${field.label[this.lang].toLowerCase()}`;
+                if(field.otherId){
+                    row.push(
+                        tools.createInputWithOptions(
+                            field.id, label, placeholder,
+                            (wrapper, options, id, placeholder, otherId) => 
+                                tools.oneChoice(wrapper, options, id, placeholder, otherId, field.required),
+                            field.storageKey,field.otherId
+                        )
+                    )
+                }else if(field.choiceId){
+                    row.push(
+                        tools.createInputWithOptions(
+                            field.id, label,  placeholder, 
+                            (wrapper, options, id, placeholder) => 
+                                tools.multipleChoice(wrapper, options, id, placeholder, formConfig.UILabels[this.lang].add, field.required), 
+                            field.storageKey
+                        )
+                    )
+                }else if(field.textarea){
+                    row.push(
+                        tools.createtextareaField(field.id, label, field.textarea, field.required)
+                    )
+                }else{
+                    row.push(
+                        tools.createInputField(field.id, label, placeholder, field.required)
+                    )
+                }
+            }
+            rows.push(tools.createRowWithColumns(row))
+        });
+        this.form.append(...rows)
+        return this.form
     };
 };

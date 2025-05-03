@@ -138,6 +138,14 @@ export function createInputField(id, innerText, placeholder, required){
     return wrapper;
 };
 
+export function createtextareaField(id, innerText, rows, required){
+    const label = createCustomElement({tag: "label", htmlFor: id, innerText, classList: ["form-label"]});
+    const input = createCustomElement({tag: "textarea", id, rows, classList: ["form-control"], required});
+    const wrapper = createCustomElement({tag: "div", classList: ["form-group"]});
+    wrapper.append(label, input);
+    return wrapper;
+}
+
 function populateSuggestions(input, options, selectedChoices = [], suggestionsWrapper) {
     const filtered = options.filter(opt => !selectedChoices.includes(opt));
     suggestionsWrapper.innerHTML = "";
@@ -157,8 +165,7 @@ function setupDropdownHandler(input, options, suggestionsWrapper){
     });
 }
 
-export function oneChoice(wrapper, options, id, placeholder, required, otherId){
-
+export function oneChoice(wrapper, options, id, placeholder,  otherId, required){
     const input = createCustomElement({tag: "input", id, placeholder, classList: ["form-control"], required});
     wrapper.appendChild(input);
     if(options.length !== 0){
@@ -210,21 +217,32 @@ function displaySelectedChoices(selectedChoices, choiceContainer) {
 
 function setupAddButton(button, selectedChoices, choiceWrapper, input, suggestionsWrapper){
     button.addEventListener("click", () =>{
-        console.log("[DEBUG] Bouton cliqué")
         const ingredient = input.value.trim();
         if (ingredient && !selectedChoices.includes(ingredient)) {
             selectedChoices.push(capitalize(ingredient));
-            displaySelectedChoices(selectedChoices, choiceWrapper);
+            displaySelectedChoices(selectedChoices, choiceWrapper, input);
         }
         input.value = "";
         suggestionsWrapper.innerHTML = "";
     });
 }
 
-export function multipleChoice(wrapper, options, id, placeholder, addLabel){
+function bindChildRequiredValidation({input, container, message }) {
+    const observer = new MutationObserver(() => {
+        if (container.children.length === 0) {
+            input.setCustomValidity(message);
+        } else {
+            input.setCustomValidity(""); // Champ redevenu valide
+        }
+    });
+
+    observer.observe(container, { childList: true });
+}
+
+export function multipleChoice(wrapper, options, id, placeholder, addLabel, required){
     const selectedChoices = [];
     const suggestionWrapper = createCustomElement({tag: "div", classList: ["list-group", "overflow-auto", "suggestion-scrollable"]});
-    const choiceWrapper = createCustomElement({tag: "div"});
+    const choiceWrapper = createCustomElement({tag: "div", id:"ok"});
     const input = createCustomElement({tag: "input", id, placeholder, classList: ["form-control"]});
     const button = createCustomElement({tag: "button", type: "button", textContent: addLabel, classList: ["btn", "btn-custom-secondary"]});
     const inputRow = createCustomElement({tag: "div", classList: ["d-flex", "mb-2"]});
@@ -233,14 +251,15 @@ export function multipleChoice(wrapper, options, id, placeholder, addLabel){
     setupAutocompleteListener(input, options, selectedChoices, suggestionWrapper)
     setupKeyboard({input, wrapper :suggestionWrapper})
     setupAddButton(button, selectedChoices, choiceWrapper, input, suggestionWrapper)
+    if (required) {bindChildRequiredValidation({input, container: choiceWrapper, message: "Veuillez ajouter au moins 1 ingrédient."})}
 
 }
 
-export function createInputWithOptions(id, innerText, placeholder,callback, storageKey, otherId, required){
+export function createInputWithOptions(id, innerText, placeholder, callback, storageKey, otherId, required){
     const label = createCustomElement({tag: "label", htmlFor: id, innerText, classList: ["form-label"]});
     const option = getDataFromLocalStorage(storageKey);
     const wrapper = createCustomElement({tag: "div", classList: ["form-group", "position-relative"]});
     wrapper.appendChild(label);
-    callback(wrapper, option, id, placeholder, required, otherId);
+    callback(wrapper, option, id, placeholder, otherId, required);
     return wrapper;
 };
