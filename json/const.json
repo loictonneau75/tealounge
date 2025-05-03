@@ -4,10 +4,42 @@
     "form":{
         "fields":{
             "name": {
-                "value": "name",
                 "id": "nameId"
+            },
+            "type":{
+                "id": "typeId",
+                "otherId": "otherTypeId",
+                "storageKey": "typesAvailable"
+            },
+            "brand":{
+                "id": "BrandId",
+                "otherId": "otherBrandId",
+                "storageKey": "BrandsAvailable"
+            },
+            "ingredient":{
+                "id": "ingredientId",
+                "otherId": "otherIngredientId",
+                "storageKey": "ingredientsAvailable"
             }
 
+        },
+        "UILabels":{
+            "fr":{
+                "inputPrefix": "Entrez un",
+                "name": "Nom",
+                "type": "Type",
+                "brand": "Marque",
+                "ingredient": "Ingrédients",
+                "add": "Ajouter"
+            },
+            "en":{
+                "inputPrefix": "Type a",
+                "name": "Name",
+                "type": "Type",
+                "brand": "Brand",
+                "ingredient": "Ingredients",
+                "add": "Add"
+            }
         }
     }
 

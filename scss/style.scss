@@ -1,29 +1,42 @@
-@import "./bootstrap/functions";
+@import "./bootstrap/functions.scss";
 @import "./bootstrap/variables.scss";
 
-@font-face {
-    font-family: "Osake";
-    src: url("../font/Osake.otf") format("opentype");
-    font-weight: normal;
-    font-style: normal;
-}
+@import "./custom.scss";
 
-$custom-colors: (
-    "firstcolor": #88A58F,
-    "secondcolor": #a1bd8d
-);
 $theme-colors: map-merge($theme-colors, $custom-colors);
 
 $custom-display-font-size:(
     custom: 7rem
 );
 $display-font-sizes: map-merge($display-font-sizes, $custom-display-font-size);
-$display-font-family: "Osake";
+$display-font-family: $used-font;
 
+.btn-outline-custom-danger {
+    @extend .btn;
+    color: map-get($custom-colors, "custom-Danger");
+    background-color: transparent;
+    border: 0 !important;
+    padding: 0 0.25rem !important;
+
+    &:hover {
+        color: #fff;
+        background-color:map-get($custom-colors, "custom-Danger");
+    }
+
+    &:focus, &:active {
+        box-shadow: none;
+    }
+}
+
+.bg-custom-secondary{
+    color: white !important
+}
+
+@import "bootstrap/bootstrap.scss";
 
 body{
     background: {
-        image: url("../img/6b60e56eadc2fe9793a5d6dbe1e07b5a.jpg");
+        image: url($image-url);
         size: cover;
         position: center;
         repeat: no-repeat;
@@ -32,5 +45,24 @@ body{
     margin: 0;
 }
 
+.suggestion-scrollable {
+    max-height: 200px;  // ou une hauteur adaptée à ton design
+}
 
-@import "bootstrap/bootstrap.scss";
+.caret{
+    position: absolute;
+    right: 1rem;
+    top: 75%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid map-get($custom-colors, "custom-primary");
+
+}
+
+.no-border{
+    border: 0rem;
+}
