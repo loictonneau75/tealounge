@@ -13,14 +13,14 @@ $display-font-family: $used-font;
 
 .btn-outline-custom-danger {
     @extend .btn;
-    color: map-get($custom-colors, "custom-Danger");
+    color: map-get($custom-colors, "custom-danger")!important;
     background-color: transparent;
     border: 0 !important;
     padding: 0 0.25rem !important;
 
     &:hover {
         color: #fff;
-        background-color:map-get($custom-colors, "custom-Danger");
+        background-color:map-get($custom-colors, "custom-danger")!important;
     }
 
     &:focus, &:active {

@@ -47,9 +47,43 @@ export class TeaForm{
             rows.push(tools.createRowWithColumns(row))
         });
         console.log(formConfig.UILabels[this.lang].send)
-        const submitBtn = tools.createCustomElement({tag: "button", type:"submit", textContent: formConfig.UILabels[this.lang].send})
+        const submitBtn = tools.createCustomElement({tag: "button", type:"submit", textContent: formConfig.UILabels[this.lang].send, classList: ["btn", "btn-custom-secondary"]})
+        submitBtn.addEventListener("click", e => {
+            e.preventDefault();
+            console.log("click")
+        });
         rows.push(tools.createRowWithColumns([submitBtn]))
         this.form.append(...rows)
         return this.form
+        
+        submitBtn.addEventListener("click", e => {
+            e.preventDefault();
+            
+            const pillsContainer = document.getElementById("ok"); // id défini dans multipleChoice()
+            const pills = Array.from(pillsContainer.querySelectorAll(".badge"))
+                .map(p => p.firstChild.textContent.trim());
+        
+            // Exemple de contrôle manuel (si nécessaire en plus du MutationObserver)
+            const ingredientInput = pillsContainer.previousSibling.querySelector("input");
+            if (pills.length === 0 && ingredientInput) {
+                ingredientInput.setCustomValidity("Veuillez ajouter au moins 1 ingrédient.");
+            } else if (ingredientInput) {
+                ingredientInput.setCustomValidity("");
+            }
+        
+            // Validation HTML5
+            if (this.form.checkValidity()) {
+                console.log("Formulaire valide ✅");
+                this.form.reset();
+                // (Optionnel) vider les chips manuellement :
+                if (pillsContainer) pillsContainer.innerHTML = "";
+            } else {
+                console.log("Formulaire invalide ❌");
+                this.form.reportValidity();
+            }
+        });
+        
+        
+        
     };
 };

@@ -1,5 +1,5 @@
 {
-    "siteName": "Tea Loundge",
+    "siteName": "Tea\nLoundge",
     "version": "1.0.0",
     "form":{
         "fields":[{
@@ -41,6 +41,17 @@
                 "label": {
                     "fr": "Ingrédient",
                     "en": "Ingredient"
+                }
+            }
+        },{
+            "adjective":{
+                "id": "adjectiveId",
+                "choiceId": "chosenAdjectiveId",
+                "storageKey": "adjectivesAvailable",
+                "required": true,
+                "label": {
+                    "fr": "Adjectif",
+                    "en": "Adjective"
                 }
             }
         },{
