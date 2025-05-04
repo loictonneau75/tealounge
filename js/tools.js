@@ -132,7 +132,7 @@ export function createRowWithColumns(contents){
 
 export function createInputField(id, innerText, placeholder, required){
     const label = createCustomElement({tag: "label", htmlFor: id, innerText, classList: ["form-label"]});
-    const input = createCustomElement({tag: "input", id, type: "", placeholder, classList: ["form-control"], required});
+    const input = createCustomElement({tag: "input", id, type: "text", placeholder, classList: ["form-control"], required});
     const wrapper = createCustomElement({tag: "div", classList: ["form-group"]});
     wrapper.append(label, input);
     return wrapper;
@@ -166,13 +166,12 @@ function setupDropdownHandler(input, options, suggestionsWrapper){
 }
 
 export function oneChoice(wrapper, options, id, placeholder,  otherId, required){
-    const input = createCustomElement({tag: "input", id, placeholder, classList: ["form-control"], required});
+    const input = createCustomElement({tag: "input", id, type: "text", placeholder, classList: ["form-control"], readOnly:"readOnly"});
     wrapper.appendChild(input);
     if(options.length !== 0){
         const suggestionWrapper = createCustomElement({tag: "div", classList: ["list-group", "overflow-auto", "suggestion-scrollable"]})
         const button = createCustomElement({tag: "div", classList: ["caret"]});
-        const otherInput = createCustomElement({tag: "input",id: otherId, placeholder, classList: ["form-control", "d-none"]});
-        input.readOnly = "readOnly"
+        const otherInput = createCustomElement({tag: "input",id: otherId, type: "text", placeholder, classList: ["form-control", "d-none"]});
         setupDropdownHandler(input, ["autre", ...options], suggestionWrapper);
         setupKeyboard({input, wrapper:suggestionWrapper, otherInput, required});
         wrapper.append(button, suggestionWrapper, otherInput);
@@ -235,7 +234,7 @@ export function multipleChoice(wrapper, options, id, placeholder, addLabel, requ
     const selectedChoices = [];
     const suggestionWrapper = createCustomElement({tag: "div", classList: ["list-group", "overflow-auto", "suggestion-scrollable"]});
     const choiceWrapper = createCustomElement({tag: "div", id:"ok"});
-    const input = createCustomElement({tag: "input", id, placeholder, classList: ["form-control"]});
+    const input = createCustomElement({tag: "input", id, type: "text", placeholder, classList: ["form-control"]});
     const button = createCustomElement({tag: "button", type: "button", textContent: addLabel, classList: ["btn", "btn-custom-secondary"]});
     const inputRow = createCustomElement({tag: "div", classList: ["d-flex", "mb-2"]});
     inputRow.append(input, button);

@@ -46,16 +46,13 @@ export class TeaForm{
             }
             rows.push(tools.createRowWithColumns(row))
         });
-        console.log(formConfig.UILabels[this.lang].send)
         const submitBtn = tools.createCustomElement({tag: "button", type:"submit", textContent: formConfig.UILabels[this.lang].send, classList: ["btn", "btn-custom-secondary"]})
         submitBtn.addEventListener("click", e => {
             e.preventDefault();
-            console.log("click")
         });
         rows.push(tools.createRowWithColumns([submitBtn]))
         this.form.append(...rows)
         return this.form
-        
         submitBtn.addEventListener("click", e => {
             e.preventDefault();
             
