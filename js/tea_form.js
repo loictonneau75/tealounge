@@ -111,7 +111,7 @@ export class TeaForm {
     }
 
     buildSubmitButton() {
-        const btn = dom_helpers.createCustomElement({tag: "button", type: "submit", textContent: this.UILabels.send, classList: ["btn", "btn-custom-secondary"]});
+        const btn = dom_helpers.createCustomElement({tag: "button", type: "submit", textContent: this.UILabels.send, classList: ["btn", "btn-custom-secondary", "mt-3"]});
         btn.addEventListener("click", e => {
             e.preventDefault();
             const { isValid, values } = this.validateFields();

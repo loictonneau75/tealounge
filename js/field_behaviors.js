@@ -3,14 +3,17 @@ import * as dom_helpers from "./dom_helpers.js"
 
 export function oneChoice(wrapper, options, id, placeholder,  otherId, other, required){
     const input = dom_helpers.createCustomElement({tag: "input", id, type: "text", placeholder, classList: ["form-control"], required});
-    wrapper.appendChild(input);
+    const innerWrapper = dom_helpers.createCustomElement({tag: "div", classList: ["position-relative"]});
+    innerWrapper.appendChild(input);
+    wrapper.appendChild(innerWrapper);
     if(options.length !== 0){
         const suggestionWrapper = dom_helpers.createCustomElement({tag: "div", classList: ["list-group", "overflow-auto", "suggestion-scrollable"]})
         const button = dom_helpers.createCustomElement({tag: "div", classList: ["caret"]});
         const otherInput = dom_helpers.createCustomElement({tag: "input",id: otherId, type: "text", placeholder, classList: ["form-control", "d-none"]});
         setupDropdownHandler(input, [other, ...options], suggestionWrapper);
         setupKeyboard({input, wrapper:suggestionWrapper, otherInput, other});
-        wrapper.append(button, suggestionWrapper, otherInput);
+        innerWrapper.appendChild(button)
+        wrapper.append(innerWrapper, suggestionWrapper, otherInput);
     };
 };
 
@@ -129,7 +132,7 @@ function displaySelectedChoices(selectedChoices, choiceContainer) {
     choiceContainer.innerHTML = "";
     selectedChoices.forEach((ingredient, index) => {
         const pill = dom_helpers.createCustomElement({tag: "span", textContent: ingredient, classList:["badge", "bg-custom-secondary", "rounded-pill"]})
-        const closeBtn = dom_helpers.createCustomElement({tag: "button", type: "button", textContent: "×", classList: ["btn", "btn-outline-custom-danger"]})
+        const closeBtn = dom_helpers.createCustomElement({tag: "button", type: "button", textContent: "×", classList: ["btn", "btn-outline-custom-danger", "ms-2"]})
         closeBtn.addEventListener('click', () => {
             selectedChoices.splice(index, 1);
             displaySelectedChoices(selectedChoices, choiceContainer);
