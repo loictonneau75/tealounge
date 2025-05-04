@@ -13,7 +13,9 @@ export function createCustomElement({tag = requiredParam("tag"), innerText = nul
 export function createRowWithColumns(contents){
     const row = createCustomElement({tag: "div", classList: ["row", "g-3"]});
     contents.forEach(content => {
-        const col = createCustomElement({tag: "div", classList: [`col-md-${Math.floor(12 / contents.length)}`]});
+        //todo ajouter le nbColomn
+        const colsize = Math.floor(12 / contents.length)
+        const col = createCustomElement({tag: "div", classList: [`col-md-${colsize}`]});
         col.appendChild(content);
         row.appendChild(col);
     });

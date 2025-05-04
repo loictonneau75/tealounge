@@ -27,7 +27,11 @@ export class TeaForm {
 
     buildFieldRow(fields) {
         const row = [];
-        Object.values(fields).forEach(field => {row.push(this.buildField(field))});
+        Object.values(fields).forEach(field => {
+            const element = this.buildField(field);
+            if (field.nbColumn) {element.dataset.colspan = field.nbColumn}
+            row.push(element);
+        });
         return dom_helpers.createRowWithColumns(row);
     }
 

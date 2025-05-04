@@ -48,7 +48,7 @@
                 "id": "adjectiveId",
                 "choiceId": "chosenAdjectiveId",
                 "storageKey": "adjectivesAvailable",
-                "nbColumn": 2,
+                "nbColumn": 1,
                 "required": true,
                 "label": {
                     "fr": "Adjectif",
