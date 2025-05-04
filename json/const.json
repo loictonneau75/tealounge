@@ -1,5 +1,5 @@
 {
-    "siteName": "Tea\nLoundge",
+    "siteName": "tea_loundge",
     "version": "1.0.0",
     "form":{
         "fields":[{
@@ -69,12 +69,16 @@
             "fr":{
                 "inputPrefix": "Entrez un",
                 "add": "Ajouter",
-                "send": "Envoyer"
+                "send": "Envoyer",
+                "errormsg": "Merci d'insérer une valeur.",
+                "other": "Autre"
             },
             "en":{
                 "inputPrefix": "Type a",
                 "add": "Add",
-                "send": "Send"
+                "send": "Send",
+                "errormsg": "Please insert a value.",
+                "other": "Other"
             }
         }
     }
