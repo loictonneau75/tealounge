@@ -193,14 +193,6 @@ function setupAutocompleteListener(input, options,  selectedChoices, suggestions
     });
 };
 
-function createIngredientPill(ingredient, onRemove){
-    const pill = createCustomElement({tag: "span", textContent: ingredient, classList:["badge", "bg-custom-secondary", "rounded-pill"]})
-    const closeBtn = createCustomElement({tag: "button", type: "button", textContent: "×", classList: ["btn", "btn-outline-danger"]})
-    closeBtn.addEventListener('click', onRemove);
-    pill.appendChild(closeBtn);
-    return pill
-};
-
 function displaySelectedChoices(selectedChoices, choiceContainer) {
     choiceContainer.innerHTML = "";
     selectedChoices.forEach((ingredient, index) => {
