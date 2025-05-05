@@ -28,7 +28,6 @@
                 "otherId": "otherBrandId",
                 "storageKey": "BrandsAvailable",
                 "required": false,
-                "nbColumn": 2,
                 "label": {
                     "fr": "Marque",
                     "en": "Brand"

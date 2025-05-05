@@ -94,7 +94,7 @@ export class TeaForm {
     validateFields() {
         let isValid = true;
         const values = [];
-        this.config.field.forEach(fields => {
+        this.config.fields.forEach(fields => {
             Object.values(fields).forEach(field => {
                 let result;
                 if (field.required) {
@@ -139,4 +139,3 @@ export class TeaForm {
         this.form.append(...rows);
         return this.form;
     }
-}

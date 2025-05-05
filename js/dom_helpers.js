@@ -13,10 +13,18 @@ export function createCustomElement({tag = requiredParam("tag"), innerText = nul
 export function createRowWithColumns(contents){
     const row = createCustomElement({tag: "div", classList: ["row", "g-3"]});
     contents.forEach(content => {
-        //todo ajouter le nbColomn
-        const colsize = Math.floor(12 / contents.length)
-        const col = createCustomElement({tag: "div", classList: [`col-md-${colsize}`]});
-        col.appendChild(content);
+        const col = createCustomElement({tag: "div", classList: [`col-md-${Math.floor(12 / contents.length)}`]});
+        if (content.dataset.nbColumn){
+            const innerRow = createCustomElement({tag: "div", classList: ["row", "g-3"]});
+            for (let i  = 0; i < parseInt(content.dataset.nbColumn); i++){
+                const innerCol = createCustomElement({tag: "div",classList: [`col-md-${Math.floor(12 / parseInt(content.dataset.nbColumn))}`]});
+                if (i === 0){innerCol.appendChild(content)}
+                innerRow.appendChild(innerCol)
+            }
+            col.appendChild(innerRow)
+        }else{
+            col.appendChild(content);
+        }
         row.appendChild(col);
     });
     return row;
@@ -42,21 +50,3 @@ export function createInputWithOptions(id, innerText, placeholder, callback, sto
     const label = createCustomElement({tag: "label", htmlFor: id, innerText, classList: ["form-label"]});
     const option = getDataFromLocalStorage(storageKey);
     const wrapper = createCustomElement({tag: "div", classList: ["form-group", "position-relative"]});
-    wrapper.appendChild(label);
-    callback(wrapper, option, id, placeholder, otherId);
-    return wrapper;
-};
-
-function getDataFromLocalStorage(storageKey){
-    const rawData = localStorage.getItem(storageKey);
-    try{
-        return rawData ? JSON.parse(rawData) : [];
-    }catch(e){
-        console.error("Erreur de parsing JSON: ", e);
-        return [];
-    };
-};
-
-function requiredParam(paramName){
-    throw new Error(`l'Argument "${paramName}" est requis`);
-};
