@@ -28,6 +28,7 @@
                 "otherId": "otherBrandId",
                 "storageKey": "BrandsAvailable",
                 "required": false,
+                "nbColumn": 2,
                 "label": {
                     "fr": "Marque",
                     "en": "Brand"
@@ -48,7 +49,7 @@
                 "id": "adjectiveId",
                 "choiceId": "chosenAdjectiveId",
                 "storageKey": "adjectivesAvailable",
-                "nbColumn": 1,
+                "nbColumn": 2,
                 "required": true,
                 "label": {
                     "fr": "Adjectif",
