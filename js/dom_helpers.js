@@ -50,3 +50,21 @@ export function createInputWithOptions(id, innerText, placeholder, callback, sto
     const label = createCustomElement({tag: "label", htmlFor: id, innerText, classList: ["form-label"]});
     const option = getDataFromLocalStorage(storageKey);
     const wrapper = createCustomElement({tag: "div", classList: ["form-group", "position-relative"]});
+    wrapper.appendChild(label);
+    callback(wrapper, option, id, placeholder, otherId);
+    return wrapper;
+};
+
+function getDataFromLocalStorage(storageKey){
+    const rawData = localStorage.getItem(storageKey);
+    try{
+        return rawData ? JSON.parse(rawData) : [];
+    }catch(e){
+        console.error("Erreur de parsing JSON: ", e);
+        return [];
+    };
+};
+
+function requiredParam(paramName){
+    throw new Error(`l'Argument "${paramName}" est requis`);
+};
