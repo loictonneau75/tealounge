@@ -1,32 +1,66 @@
-import * as utils from "./utils.js"
+import * as utils from "./utils.js";
 
-export function updateLocalStorage(storageUpdates) {
-        storageUpdates.forEach(({ key, value }) => {
-            const existing = JSON.parse(localStorage.getItem(key)) || [];
-            const newValues = Array.isArray(value) ? value : [value];
-            const merged = [...new Set([...existing, ...newValues])];
-            localStorage.setItem(key, JSON.stringify(merged));
-        });
-    }
 
-export function structureDataToStore(values) {
-    const data = {};
-    values.forEach(({ fieldname, value }) => {
-        data[fieldname] = value;
+/**
+ * Updates localStorage by merging new values into existing arrays for each specified key.
+ * Ensures that stored values are unique.
+ *
+ * @function updateLocalStorage
+ * @param {Array<{key: string, value: string|string[]}>} storageUpdates - An array of objects containing the key and the value(s) to store.
+ */
+export function updateLocalStorage(storageUpdates){
+    storageUpdates.forEach(({ key, value }) => {
+        const existing = JSON.parse(localStorage.getItem(key)) || [];
+        const newValues = Array.isArray(value) ? value : [value];
+        const merged = [...new Set([...existing, ...newValues])];
+        localStorage.setItem(key, JSON.stringify(merged));
     });
-    return data;
-}
+};
 
-export async function storeDataIfNew(dataToStore) {
-        const key = await utils.getConfigValue("siteName");
-        const existingData = JSON.parse(localStorage.getItem(key)) || [];
-    
-        const alreadyExists = existingData.some(item =>
-            JSON.stringify(item) === JSON.stringify(dataToStore)
-        );
-    
-        if (!alreadyExists) {
-            existingData.push(dataToStore);
-            localStorage.setItem(key, JSON.stringify(existingData));
-        }
-    }
+/**
+ * Converts an array of field-value pairs into a structured object for storage.
+ *
+ * @function structureDataToStore
+ * @param {Array<{fieldname: string, value: any}>} values - An array of objects containing field names and their corresponding values.
+ * @returns {Object} An object mapping field names to their values.
+ */
+export function structureDataToStore(values){
+    const data = {};
+    values.forEach(({ fieldname, value }) => {data[fieldname] = value});
+    return data;
+};
+
+/**
+ * Stores the provided data in localStorage under a site-specific key if it doesn't already exist.
+ * Uses deep equality (via JSON.stringify) to check for duplicates.
+ *
+ * @async
+ * @function storeDataIfNew
+ * @param {Object} dataToStore - The data object to be stored.
+ * @returns {Promise<void>} Resolves when the data is stored or skipped if already present.
+ */
+export async function storeDataIfNew(dataToStore){
+    const key = await utils.getConfigValue("siteName");
+    const existingData = JSON.parse(localStorage.getItem(key)) || [];
+    const alreadyExists = existingData.some(item => JSON.stringify(item) === JSON.stringify(dataToStore));
+    if (!alreadyExists){
+        existingData.push(dataToStore);
+        localStorage.setItem(key, JSON.stringify(existingData));
+    };
+};
+
+/**
+ * Retrieves and parses data from localStorage for a given key.
+ *
+ * @function getDataFromLocalStorage
+ * @param {string} storageKey - The key used to retrieve data from localStorage.
+ * @returns {Array|Object} The parsed data from localStorage, or an empty array if not found or if parsing fails.
+ */
+export function getDataFromLocalStorage(storageKey){
+    const rawData = localStorage.getItem(storageKey);
+    try{return rawData ? JSON.parse(rawData) : [];}
+    catch(e){
+        console.error("Erreur de parsing JSON: ", e);
+        return [];
+    };
+};
