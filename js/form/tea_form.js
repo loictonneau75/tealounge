@@ -1,5 +1,5 @@
-import * as utils from "./utils.js";
-import * as dom_helpers from "./dom_helpers.js";
+import * as utils from "../utils.js";
+import * as dom_helpers from "../dom_helpers.js";
 import * as field_behaviors from "./field_behaviors.js";
 import * as validator from "./validator.js";
 import * as storage from "./storage.js";

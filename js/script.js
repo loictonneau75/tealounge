@@ -1,6 +1,6 @@
 import * as utils from "./utils.js";
 import * as dom_helpers from "./dom_helpers.js";
-import { TeaForm } from "./tea_form.js";
+import { TeaForm } from "./form/tea_form.js";
 
 
 /**
