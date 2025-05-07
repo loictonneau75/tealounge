@@ -11,7 +11,7 @@ $custom-display-font-size:(
 $display-font-sizes: map-merge($display-font-sizes, $custom-display-font-size);
 $display-font-family: $used-font;
 
-.btn-outline-custom-danger {
+.btn-outline-custom {
     @extend .btn;
     color: map-get($custom-colors, "custom-primary")!important;
     background-color: transparent;
@@ -67,3 +67,12 @@ body{
 .no-border{
     border: 0rem;
 }
+
+.missing-value {
+    border: 2px solid map-get($custom-colors, "custom-error");
+    color: map-get($custom-colors, "custom-error");
+  
+    &::placeholder {
+      color: map-get($custom-colors, "custom-error");
+    }
+  }

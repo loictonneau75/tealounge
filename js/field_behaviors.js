@@ -132,7 +132,7 @@ function displaySelectedChoices(selectedChoices, choiceContainer) {
     choiceContainer.innerHTML = "";
     selectedChoices.forEach((ingredient, index) => {
         const pill = dom_helpers.createCustomElement({tag: "span", textContent: ingredient, classList:["badge", "bg-custom-secondary", "rounded-pill"]})
-        const closeBtn = dom_helpers.createCustomElement({tag: "button", type: "button", textContent: "×", classList: ["btn", "btn-outline-custom-danger", "ms-2"]})
+        const closeBtn = dom_helpers.createCustomElement({tag: "button", type: "button", textContent: "×", classList: ["btn", "btn-outline-custom", "ms-2"]})
         closeBtn.addEventListener('click', () => {
             selectedChoices.splice(index, 1);
             displaySelectedChoices(selectedChoices, choiceContainer);

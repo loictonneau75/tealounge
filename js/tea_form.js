@@ -44,9 +44,7 @@ export class TeaForm {
 
     attachClearErrorListeners(inputElement, parent) {
         const clearError = () => {
-            inputElement.setCustomValidity("");
-            const error = parent.querySelector(".error-message");
-            if (error) error.remove();
+            inputElement.classList.remove("missing-value")
             inputElement.removeEventListener("click", clearError);
             inputElement.removeEventListener("input", clearError);
         };
@@ -55,11 +53,8 @@ export class TeaForm {
     }
 
     invalidateField(inputElement) {
-        const errorToolTip = dom_helpers.createCustomElement({tag: "span", innerText:this.UILabels.errormsg, classList:["error-message"]});
-        const parent = inputElement.closest('.form-group');
-        parent.querySelectorAll(".error-message").forEach(e => e.remove());
-        parent.appendChild(errorToolTip);
-        this.attachClearErrorListeners(inputElement,parent);
+        inputElement.classList.add("missing-value")
+        this.attachClearErrorListeners(inputElement);
     }
 
     validateStandardField(input, required) {
