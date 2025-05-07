@@ -1,12 +1,13 @@
 import * as utils from "./utils.js";
 import * as dom_helpers from "./dom_helpers.js"
 
-export function oneChoice(wrapper, options, id, placeholder,  otherId, other, required){
-    const input = dom_helpers.createCustomElement({tag: "input", id, type: "text", placeholder, classList: ["form-control"], required});
+export function oneChoice(wrapper, options, id, placeholder,  otherId, other){
+    const input = dom_helpers.createCustomElement({tag: "input", id, type: "text", placeholder, classList: ["form-control"]});
     const innerWrapper = dom_helpers.createCustomElement({tag: "div", classList: ["position-relative"]});
     innerWrapper.appendChild(input);
     wrapper.appendChild(innerWrapper);
     if(options.length !== 0){
+        input.readOnly = "readOnly"
         const suggestionWrapper = dom_helpers.createCustomElement({tag: "div", classList: ["list-group", "overflow-auto", "suggestion-scrollable"]})
         const button = dom_helpers.createCustomElement({tag: "div", classList: ["caret"]});
         const otherInput = dom_helpers.createCustomElement({tag: "input",id: otherId, type: "text", placeholder, classList: ["form-control", "d-none"]});
@@ -17,10 +18,10 @@ export function oneChoice(wrapper, options, id, placeholder,  otherId, other, re
     };
 };
 
-export function multipleChoice(wrapper, options, id, placeholder, choiceId, addLabel, other, required){
+export function multipleChoice(wrapper, options, id, placeholder, choiceId, addLabel, other){
     const selectedChoices = [];
     const suggestionWrapper = dom_helpers.createCustomElement({tag: "div", classList: ["list-group", "overflow-auto", "suggestion-scrollable"]});
-    const choiceWrapper = dom_helpers.createCustomElement({tag: "div", id: choiceId, required});
+    const choiceWrapper = dom_helpers.createCustomElement({tag: "div", id: choiceId});
     const input = dom_helpers.createCustomElement({tag: "input",id, type: "text", placeholder, classList: ["form-control"]});
     const button = dom_helpers.createCustomElement({tag: "button", type: "button", textContent: addLabel, classList: ["btn", "btn-custom-secondary"]});
     const inputRow = dom_helpers.createCustomElement({tag: "div", classList: ["d-flex", "mb-2"]});
@@ -63,7 +64,6 @@ function handleKeyboardNavigation(input, wrapper, otherInput, state, other){
             event.preventDefault();
             if (state.currentIndex >= 0) {finalizeSelection(input, wrapper, state, items[state.currentIndex].textContent, otherInput, other)}
         } 
-        
         else if (event.key === "Escape") {
             input.blur();
             state.currentIndex = -1;

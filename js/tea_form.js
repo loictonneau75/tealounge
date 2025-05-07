@@ -15,13 +15,13 @@ export class TeaForm {
         const placeholder = `${this.UILabels.inputPrefix} ${label.toLowerCase()}`;
         const labelText = `${label} :`;
         if (field.otherId) {
-            return dom_helpers.createInputWithOptions(field.id, labelText, placeholder,(wrapper, options, id, placeholder, otherId) => field_behaviors.oneChoice(wrapper, options, id, placeholder, otherId, this.UILabels.other, field.required),field.storageKey, field.otherId);
+            return dom_helpers.createInputWithOptions(field.id, labelText, placeholder,(wrapper, options, id, placeholder, otherId) => field_behaviors.oneChoice(wrapper, options, id, placeholder, otherId, this.UILabels.other),field.storageKey, field.otherId);
         } else if (field.choiceId) {
-            return dom_helpers.createInputWithOptions(field.id, labelText, placeholder,(wrapper, options, id, placeholder) => field_behaviors.multipleChoice(wrapper, options, id, placeholder, field.choiceId, this.UILabels.add, this.UILabels.other, field.required), field.storageKey);
+            return dom_helpers.createInputWithOptions(field.id, labelText, placeholder,(wrapper, options, id, placeholder) => field_behaviors.multipleChoice(wrapper, options, id, placeholder, field.choiceId, this.UILabels.add, this.UILabels.other), field.storageKey);
         } else if (field.textarea) {
-            return dom_helpers.createtextareaField(field.id, labelText, field.textarea, field.required);
+            return dom_helpers.createtextareaField(field.id, labelText, field.textarea);
         } else {
-            return dom_helpers.createInputField(field.id, labelText, placeholder, field.required);
+            return dom_helpers.createInputField(field.id, labelText, placeholder);
         }
     }
 
@@ -30,6 +30,7 @@ export class TeaForm {
         Object.values(fields).forEach(field => {
             const element = this.buildField(field);
             if (field.nbColumn) {element.dataset.nbColumn = field.nbColumn}
+            
             row.push(element);
         });
         return dom_helpers.createRowWithColumns(row);
@@ -41,93 +42,91 @@ export class TeaForm {
         this.form.querySelectorAll("input[readonly]").forEach(input => {input.value = ""});
     };
 
-    attachClearErrorListeners(inputElement) {
+    attachClearErrorListeners(inputElement, parent) {
         const clearError = () => {
             inputElement.setCustomValidity("");
+            const error = parent.querySelector(".error-message");
+            if (error) error.remove();
             inputElement.removeEventListener("click", clearError);
             inputElement.removeEventListener("input", clearError);
         };
         inputElement.addEventListener("click", clearError);
         inputElement.addEventListener("input", clearError);
     }
-    
 
     invalidateField(inputElement) {
-        inputElement.setCustomValidity(this.UILabels.errormsg);
-        this.attachClearErrorListeners(inputElement);
+        const errorToolTip = dom_helpers.createCustomElement({tag: "span", innerText:this.UILabels.errormsg, classList:["error-message"]});
+        const parent = inputElement.closest('.form-group');
+        parent.querySelectorAll(".error-message").forEach(e => e.remove());
+        parent.appendChild(errorToolTip);
+        this.attachClearErrorListeners(inputElement,parent);
     }
 
-    validateStandardField(field) {
-        const inputElement = document.getElementById(field.id);
-        if (!inputElement || !inputElement.value.trim()) {
-            if (inputElement) this.invalidateField(inputElement);
+    validateStandardField(input, required) {
+        if (required && !input.value.trim()) {
+            if (input) this.invalidateField(input);
             return { valid: false, value: null };
         }
-        inputElement.setCustomValidity("");
-        return { valid: true, value: inputElement.value.trim() };
+        input.setCustomValidity("");
+        return { valid: true, value: input.value.trim() };
     }
 
-    validateChoiceField(field) {
-        const inputElement = document.getElementById(field.id);
-        const choiceContainer = document.getElementById(field.choiceId);
-        if (!choiceContainer || choiceContainer.children.length === 0) {
-            if (inputElement) this.invalidateField(inputElement);
+    validateChoiceField(input, choiceId, required) {
+        const choiceContainer = document.getElementById(choiceId);
+        if (required && (!choiceContainer || choiceContainer.children.length === 0)) {
+            this.invalidateField(input);
             return { valid: false, value: null };
         }
-        inputElement?.setCustomValidity("");
-        const selected = [...choiceContainer.children].map(child => child.textContent.trim());
-        return { valid: true, value: selected };
+        input.setCustomValidity("");
+        if (choiceContainer && choiceContainer.children.length > 0){
+            const selected = [...choiceContainer.children].map(child => child.firstChild.textContent.trim());
+            return { valid: true, value: selected };
+        }
+        return { valid: true, value: "" };
     }
 
-    validateOtherField(field) {
-        const inputElement = document.getElementById(field.id);
-        const otherInput = document.getElementById(field.otherId);
-        if (inputElement?.value.trim() !== this.UILabels.other) {return this.validateStandardField(field);}
-        if (!otherInput || !otherInput.value.trim()) {
+    validateOtherField(input, otherId, required) {
+        if (input.value.trim() !== this.UILabels.other) {return this.validateStandardField(input, required);}
+        const otherInput = document.getElementById(otherId)
+        const value = otherInput.value.trim()
+        if (required && !value) {
             if (otherInput) this.invalidateField(otherInput);
             return { valid: false, value: null };
         }
         otherInput.setCustomValidity("");
-        return { valid: true, value: otherInput.value.trim() };
-    }
-
-    validateFields() {
-        let isValid = true;
-        const values = [];
-        this.config.fields.forEach(fields => {
-            Object.values(fields).forEach(field => {
-                let result;
-                if (field.required) {
-                    if (field.choiceId) {result = this.validateChoiceField(field)} 
-                    else if (field.otherId) { result = this.validateOtherField(field)} 
-                    else {result = this.validateStandardField(field);}
-                } else {
-                    const input = document.getElementById(field.id);
-                    if (input?.value.trim()) {result = { valid: true, value: input.value.trim()}}
-                }
-                if (result) {
-                    isValid = isValid && result.valid;
-                    if (result.valid) {values.push({ id: field.id, value: result.value })}
-                }
-            });
-        });
-        return { isValid, values };
+        return { valid: true, value};
     }
 
     buildSubmitButton() {
-        const btn = dom_helpers.createCustomElement({tag: "button", type: "submit", textContent: this.UILabels.send, classList: ["btn", "btn-custom-secondary", "mt-3"]});
-        btn.addEventListener("click", e => {
-            e.preventDefault();
-            const { isValid, values } = this.validateFields();
-            if (this.form.checkValidity() && isValid) {
-                console.log(values);
-                this.resetForm();
-            } else {
-                this.form.reportValidity();
+        const submitBtn = dom_helpers.createCustomElement({tag: "button", type: "submit", textContent: this.UILabels.send, classList: ["btn", "btn-custom-secondary", "mt-3"]});
+        submitBtn.addEventListener("click", event => {
+            //todo a retiré
+            console.clear()
+            event.preventDefault();
+            let formValid = true
+            const values = []
+            const fieldMap = Object.assign({}, ...this.config.fields.map(row => ({ ...row })));
+            Object.values(fieldMap).forEach(field => {
+                const input = document.getElementById(field.id)
+                let result
+                if (input){
+                    if (field.otherId){result = this.validateOtherField(input, field.otherId, field.required)}
+                    else if (field.choiceId){result = this.validateChoiceField(input, field.choiceId, field.required)}
+                    else{result = this.validateStandardField(input, field.required)}
+                    console.log(field)
+                    console.log(result)
+                }
+                if(!result.valid){formValid = false}
+                else{values.push({fieldname: field.label.en, value: result.value})}
+            })
+            if (formValid){
+                console.log(values)
+            }else{
+                this.form.reportValidity()
             }
         });
-        return dom_helpers.createRowWithColumns([btn]);
-    }
+        return submitBtn
+    };
 
 
     async build() {
