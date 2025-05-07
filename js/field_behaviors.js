@@ -12,7 +12,7 @@ export function oneChoice(wrapper, options, id, placeholder,  otherId, other){
         const button = dom_helpers.createCustomElement({tag: "div", classList: ["caret"]});
         const otherInput = dom_helpers.createCustomElement({tag: "input",id: otherId, type: "text", placeholder, classList: ["form-control", "d-none"]});
         setupDropdownHandler(input, [other, ...options], suggestionWrapper);
-        setupKeyboard({input, wrapper:suggestionWrapper, otherInput, other});
+        setupKeyboard({input, wrapper: suggestionWrapper, otherInput, other});
         innerWrapper.appendChild(button)
         wrapper.append(innerWrapper, suggestionWrapper, otherInput);
     };

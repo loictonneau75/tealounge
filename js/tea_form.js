@@ -77,7 +77,7 @@ export class TeaForm {
             const selected = [...choiceContainer.children].map(child => child.firstChild.textContent.trim());
             return { valid: true, value: selected };
         }
-        return { valid: true, value: "" };
+        return { valid: true, value: null};
     }
 
     validateOtherField(input, otherId, required) {
@@ -89,17 +89,16 @@ export class TeaForm {
             return { valid: false, value: null };
         }
         otherInput.setCustomValidity("");
-        return { valid: true, value};
+        return { valid: true, value: null};
     }
 
     buildSubmitButton() {
         const submitBtn = dom_helpers.createCustomElement({tag: "button", type: "submit", textContent: this.UILabels.send, classList: ["btn", "btn-custom-secondary", "mt-3"]});
-        submitBtn.addEventListener("click", event => {
-            //todo a retiré
-            console.clear()
+        submitBtn.addEventListener("click", async event => {
             event.preventDefault();
             let formValid = true
             const values = []
+            const storageUpdates = [];
             const fieldMap = Object.assign({}, ...this.config.fields.map(row => ({ ...row })));
             Object.values(fieldMap).forEach(field => {
                 const input = document.getElementById(field.id)
@@ -108,14 +107,33 @@ export class TeaForm {
                     if (field.otherId){result = this.validateOtherField(input, field.otherId, field.required)}
                     else if (field.choiceId){result = this.validateChoiceField(input, field.choiceId, field.required)}
                     else{result = this.validateStandardField(input, field.required)}
-                    console.log(field)
-                    console.log(result)
                 }
                 if(!result.valid){formValid = false}
-                else{values.push({fieldname: field.label.en, value: result.value})}
+                else{
+                    values.push({fieldname: field.label.en, value: result.value});
+                    if (field.storageKey && result.value !== null) {
+                        storageUpdates.push({ key: field.storageKey, value: result.value });
+                    }
+                }
             })
-            if (formValid){
-                console.log(values)
+            if (formValid) {
+                const dataToStore = {};
+                values.forEach(({ fieldname, value }) => {dataToStore[fieldname] = value;});
+                const key = await utils.getConfigValue("siteName");
+                const existingData = JSON.parse(localStorage.getItem(key)) || [];
+                const alreadyExists = existingData.some(item =>
+                    JSON.stringify(item) === JSON.stringify(dataToStore)
+                );
+                if (!alreadyExists) {
+                    existingData.push(dataToStore);
+                    localStorage.setItem(key, JSON.stringify(existingData));
+                }
+                storageUpdates.forEach(({ key, value }) => {
+                    const existing = JSON.parse(localStorage.getItem(key)) || [];
+                    const newValues = Array.isArray(value) ? value : [value];
+                    const merged = [...new Set([...existing, ...newValues])];
+                    localStorage.setItem(key, JSON.stringify(merged));
+                });
             }else{
                 this.form.reportValidity()
             }

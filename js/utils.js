@@ -16,10 +16,7 @@ export async function loadFormConfig(lang) {
 }
 
 export function snakeToTitleCase(str) {
-    return str
-        .split('_')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
+    return str.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
 export function toLineBreak(str) {
