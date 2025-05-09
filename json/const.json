@@ -1,11 +1,14 @@
 {
     "siteName": "tea_loundge",
     "version": "1.0.0",
+    "object": "tea",
     "form":{
         "fields":[{
             "name": {
                 "id": "nameId",
                 "required": true,
+                "cardPosition": "header",
+                "cardRole": "title",
                 "label": {
                     "fr": "Nom",
                     "en": "Name"
@@ -16,6 +19,8 @@
                 "otherId": "otherTypeId",
                 "storageKey": "typesAvailable",
                 "required": true,
+                "cardPosition": "header",
+                "cardRole": "subtitle",
                 "label": {
                     "fr": "Type",
                     "en": "Type"
@@ -26,8 +31,10 @@
             "brand":{
                 "id": "BrandId",
                 "otherId": "otherBrandId",
-                "storageKey": "BrandsAvailable",
+                "storageKey": "brandsAvailable",
                 "required": false,
+                "cardPosition": "body",
+                "cardRole": "text",
                 "label": {
                     "fr": "Marque",
                     "en": "Brand"
@@ -38,6 +45,8 @@
                 "choiceId": "chosenIngredientId",
                 "storageKey": "ingredientsAvailable",
                 "required": true,
+                "cardPosition": "body",
+                "cardRole": "text",
                 "label": {
                     "fr": "Ingrédient",
                     "en": "Ingredient"
@@ -50,6 +59,8 @@
                 "storageKey": "adjectivesAvailable",
                 "nbColumn": 2,
                 "required": false,
+                "cardPosition": "body",
+                "cardRole": "text",
                 "label": {
                     "fr": "Adjectif",
                     "en": "Adjective"
@@ -60,6 +71,8 @@
                 "id": "commentId",
                 "textarea": 4,
                 "required": false,
+                "cardPosition": "footer",
+                "cardRole": "text",
                 "label": {
                     "fr": "Commentaire",
                     "en": "Comment"

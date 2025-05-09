@@ -24,10 +24,11 @@ function setupDoc(sitename){
 async function createPage(title){
     const h1 = dom_helpers.createCustomElement({tag: "h1", innerText: title, classList: ["text-center", "display-custom"]});
     const form = new TeaForm("en");
-    const formWrapper = dom_helpers.createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5", "my-5"]});
+    const formWrapper = dom_helpers.createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5"]});
     formWrapper.append(h1, await form.build());
+    const carouselWrapper = dom_helpers.createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5"]})
     const MainWrapper = document.createElement("div");
-    MainWrapper.append(formWrapper);
+    MainWrapper.append(formWrapper, carouselWrapper);
     return MainWrapper;
 };
 

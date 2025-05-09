@@ -40,7 +40,7 @@ export function structureDataToStore(values){
  * @returns {Promise<void>} Resolves when the data is stored or skipped if already present.
  */
 export async function storeDataIfNew(dataToStore){
-    const key = await utils.getConfigValue("siteName");
+    const key = await utils.getConfigValue("object");
     const existingData = JSON.parse(localStorage.getItem(key)) || [];
     const alreadyExists = existingData.some(item => JSON.stringify(item) === JSON.stringify(dataToStore));
     if (!alreadyExists){
