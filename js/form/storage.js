@@ -1,5 +1,17 @@
 import * as utils from "../utils.js";
 
+/**
+ * Retrieves and parses data from localStorage for a given key.
+ *
+ * @function getDataFromLocalStorage
+ * @param {string} storageKey - The key used to retrieve data from localStorage.
+ * @returns {Array|Object} The parsed data from localStorage, or an empty array if not found.
+ */
+export function getDataFromLocalStorage(storageKey){
+    const rawData = localStorage.getItem(storageKey);
+    try {return rawData ? JSON.parse(rawData) : []}
+    catch(e) {console.error("Erreur de parsing JSON: ", e)};
+};
 
 /**
  * Updates localStorage by merging new values into existing arrays for each specified key.
@@ -39,28 +51,11 @@ export function structureDataToStore(values){
  * @param {Object} dataToStore - The data object to be stored.
  * @returns {Promise<void>} Resolves when the data is stored or skipped if already present.
  */
-export async function storeDataIfNew(dataToStore){
-    const key = await utils.getConfigValue("object");
+export function storeDataIfNew(dataToStore, key){
     const existingData = JSON.parse(localStorage.getItem(key)) || [];
     const alreadyExists = existingData.some(item => JSON.stringify(item) === JSON.stringify(dataToStore));
     if (!alreadyExists){
         existingData.push(dataToStore);
         localStorage.setItem(key, JSON.stringify(existingData));
-    };
-};
-
-/**
- * Retrieves and parses data from localStorage for a given key.
- *
- * @function getDataFromLocalStorage
- * @param {string} storageKey - The key used to retrieve data from localStorage.
- * @returns {Array|Object} The parsed data from localStorage, or an empty array if not found or if parsing fails.
- */
-export function getDataFromLocalStorage(storageKey){
-    const rawData = localStorage.getItem(storageKey);
-    try{return rawData ? JSON.parse(rawData) : [];}
-    catch(e){
-        console.error("Erreur de parsing JSON: ", e);
-        return [];
     };
 };

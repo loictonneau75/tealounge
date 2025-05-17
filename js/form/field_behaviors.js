@@ -57,6 +57,38 @@ export function multipleChoice(wrapper, options, id, placeholder, choiceId, addL
 };
 
 /**
+ * Attaches a click event listener to an input element to display suggestion options in a dropdown.
+ *
+ * @function setupDropdownHandler
+ * @param {HTMLInputElement} input - The input field that triggers the suggestion dropdown on click.
+ * @param {string[]} options - The list of options to display as suggestions.
+ * @param {HTMLElement} suggestionsWrapper - The container element where suggestions will be rendered.
+ */
+function setupDropdownHandler(input, options, suggestionsWrapper){
+    input.addEventListener("click", () => {populateSuggestions(input, options, [], suggestionsWrapper)});
+};
+
+/**
+ * Sets up an input event listener to filter and display autocomplete suggestions as the user types.
+ *
+ * @function setupAutocompleteListener
+ * @param {HTMLInputElement} input - The input element to attach the listener to.
+ * @param {string[]} options - The full list of possible suggestions.
+ * @param {string[]} selectedChoices - The list of already selected options to exclude from suggestions.
+ * @param {HTMLElement} suggestionsWrapper - The container where filtered suggestions will be displayed.
+ */
+function setupAutocompleteListener(input, options,  selectedChoices, suggestionsWrapper){
+    input.addEventListener("input", () => {
+        const inputValue = input.value.trim();
+        let filtered;
+        suggestionsWrapper.innerHTML = "";
+        if (!inputValue) filtered = options.filter(ing => !selectedChoices.includes(ing))
+        else filtered = options.filter(ing => ing.startsWith(utils.capitalize(inputValue)) && !selectedChoices.includes(ing));
+        populateSuggestions(input, filtered, selectedChoices, suggestionsWrapper);
+    });
+};
+
+/**
  * Sets up keyboard navigation and interaction for a suggestion-based input field.
  *
  * @function setupKeyboard
@@ -69,8 +101,31 @@ export function multipleChoice(wrapper, options, id, placeholder, choiceId, addL
 function setupKeyboard({input, wrapper, otherInput, other}){
     const state = { currentIndex: -1 };
     handleKeyboardNavigation(input, wrapper, otherInput, state, other);
-    hideSuggestionsOnBlur(input, wrapper);
+    hideSuggestionsOnlosedFocus(input, wrapper);
     handleSuggestionClick(input, wrapper, otherInput, state, other);
+};
+
+/**
+ * Sets up the "Add" button to append a new choice to the selected list and display it as a badge.
+ * Clears the input and suggestion list after adding.
+ *
+ * @function setupAddButton
+ * @param {HTMLButtonElement} button - The button element that triggers the addition.
+ * @param {string[]} selectedChoices - The array storing currently selected items.
+ * @param {HTMLElement} choiceWrapper - The container where selected items (badges) will be displayed.
+ * @param {HTMLInputElement} input - The input field from which the value is taken.
+ * @param {HTMLElement} suggestionsWrapper - The container holding the suggestion list, to be cleared after adding.
+ */
+function setupAddButton(button, selectedChoices, choiceWrapper, input, suggestionsWrapper){
+    button.addEventListener("click", () =>{
+        const ingredient = input.value.trim();
+        if (ingredient && !selectedChoices.includes(ingredient)){
+            selectedChoices.push(utils.capitalize(ingredient));
+            displaySelectedChoices(selectedChoices, choiceWrapper, input);
+        };
+        input.value = "";
+        suggestionsWrapper.innerHTML = "";
+    });
 };
 
 /**
@@ -109,13 +164,35 @@ function handleKeyboardNavigation(input, wrapper, otherInput, state, other){
 };
 
 /**
+ * Populates the suggestion dropdown with options not already selected, and sets up click behavior to fill the input.
+ *
+ * @function populateSuggestions
+ * @param {HTMLInputElement} input - The input element to update when a suggestion is selected.
+ * @param {string[]} options - The list of all available options.
+ * @param {string[]} [selectedChoices=[]] - An optional array of already selected values to exclude.
+ * @param {HTMLElement} suggestionsWrapper - The container where the suggestion buttons will be rendered.
+ */
+function populateSuggestions(input, options, selectedChoices = [], suggestionsWrapper){
+    const filtered = options.filter(opt => !selectedChoices.includes(opt));
+    suggestionsWrapper.innerHTML = "";
+    filtered.forEach(option => {
+        const button = dom_helpers.createCustomElement({tag: "button", type: "button", textContent: option, classList: ["list-group-item", "list-group-item-action", "suggestion-item"]});
+        button.addEventListener("click", () => {
+            input.value = option;
+            suggestionsWrapper.innerHTML = "";
+        });
+        suggestionsWrapper.appendChild(button);
+    });
+};
+
+/**
  * Clears the suggestion list shortly after the input field loses focus.
  *
- * @function hideSuggestionsOnBlur
+ * @function hideSuggestionsOnlosedFocus
  * @param {HTMLInputElement} input - The input element to watch for the blur event.
  * @param {HTMLElement} wrapper - The container holding the suggestion items to be cleared.
  */
-function hideSuggestionsOnBlur(input, wrapper){
+function hideSuggestionsOnlosedFocus(input, wrapper){
     input.addEventListener("blur", () => {setTimeout(() => {wrapper.innerHTML = "";}, 250)});
 };
 
@@ -156,60 +233,6 @@ function finalizeSelection(input,wrapper, state, selected, otherInput, other){
 };
 
 /**
- * Attaches a click event listener to an input element to display suggestion options in a dropdown.
- *
- * @function setupDropdownHandler
- * @param {HTMLInputElement} input - The input field that triggers the suggestion dropdown on click.
- * @param {string[]} options - The list of options to display as suggestions.
- * @param {HTMLElement} suggestionsWrapper - The container element where suggestions will be rendered.
- */
-function setupDropdownHandler(input, options, suggestionsWrapper){
-    input.addEventListener("click", () => {populateSuggestions(input, options, [], suggestionsWrapper)});
-};
-
-/**
- * Sets up an input event listener to filter and display autocomplete suggestions as the user types.
- *
- * @function setupAutocompleteListener
- * @param {HTMLInputElement} input - The input element to attach the listener to.
- * @param {string[]} options - The full list of possible suggestions.
- * @param {string[]} selectedChoices - The list of already selected options to exclude from suggestions.
- * @param {HTMLElement} suggestionsWrapper - The container where filtered suggestions will be displayed.
- */
-function setupAutocompleteListener(input, options,  selectedChoices, suggestionsWrapper){
-    input.addEventListener("input", () => {
-        const inputValue = input.value.trim();
-        let filtered;
-        suggestionsWrapper.innerHTML = "";
-        if (!inputValue) filtered = options.filter(ing => !selectedChoices.includes(ing))
-        else filtered = options.filter(ing => ing.startsWith(utils.capitalize(inputValue)) && !selectedChoices.includes(ing));
-        populateSuggestions(input, filtered, selectedChoices, suggestionsWrapper);
-    });
-};
-
-/**
- * Populates the suggestion dropdown with options not already selected, and sets up click behavior to fill the input.
- *
- * @function populateSuggestions
- * @param {HTMLInputElement} input - The input element to update when a suggestion is selected.
- * @param {string[]} options - The list of all available options.
- * @param {string[]} [selectedChoices=[]] - An optional array of already selected values to exclude.
- * @param {HTMLElement} suggestionsWrapper - The container where the suggestion buttons will be rendered.
- */
-function populateSuggestions(input, options, selectedChoices = [], suggestionsWrapper){
-    const filtered = options.filter(opt => !selectedChoices.includes(opt));
-    suggestionsWrapper.innerHTML = "";
-    filtered.forEach(option => {
-        const button = dom_helpers.createCustomElement({tag: "button", type: "button", textContent: option, classList: ["list-group-item", "list-group-item-action", "suggestion-item"]});
-        button.addEventListener("click", () => {
-            input.value = option;
-            suggestionsWrapper.innerHTML = "";
-        });
-        suggestionsWrapper.appendChild(button);
-    });
-};
-
-/**
  * Displays selected choices as removable badge elements inside a container.
  * Each badge includes a close button that removes the corresponding choice when clicked.
  *
@@ -228,28 +251,5 @@ function displaySelectedChoices(selectedChoices, choiceContainer){
         });
         pill.appendChild(closeBtn);
         choiceContainer.appendChild(pill);
-    });
-};
-
-/**
- * Sets up the "Add" button to append a new choice to the selected list and display it as a badge.
- * Clears the input and suggestion list after adding.
- *
- * @function setupAddButton
- * @param {HTMLButtonElement} button - The button element that triggers the addition.
- * @param {string[]} selectedChoices - The array storing currently selected items.
- * @param {HTMLElement} choiceWrapper - The container where selected items (badges) will be displayed.
- * @param {HTMLInputElement} input - The input field from which the value is taken.
- * @param {HTMLElement} suggestionsWrapper - The container holding the suggestion list, to be cleared after adding.
- */
-function setupAddButton(button, selectedChoices, choiceWrapper, input, suggestionsWrapper){
-    button.addEventListener("click", () =>{
-        const ingredient = input.value.trim();
-        if (ingredient && !selectedChoices.includes(ingredient)){
-            selectedChoices.push(utils.capitalize(ingredient));
-            displaySelectedChoices(selectedChoices, choiceWrapper, input);
-        };
-        input.value = "";
-        suggestionsWrapper.innerHTML = "";
     });
 };

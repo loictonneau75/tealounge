@@ -1,6 +1,4 @@
-import * as utils from "./utils.js";
 import * as storage from "./form/storage.js";
-
 
 /**
  * Creates and returns a customized DOM element with various optional attributes.
@@ -30,46 +28,6 @@ export function createCustomElement({tag = utils.requiredParam("tag"), innerText
         if (!["tag", "classList"].includes(key) && val !== null && val !== undefined) element[key] = val;
     };
     return element;
-};
-
-/**
- * Creates an inner Bootstrap-style row with a specified number of columns .
- * The content is inserted into the first column.
- *
- * @function createInnerRow
- * @param {HTMLElement[]} contents - An array of DOM elements to be placed inside columns.
- * @param {string} nbOfColumn - The number of inner columns.
- * @returns {HTMLElement} A <div> element with the "row" class containing nested columns.
- */
-function createInnerRow(content, nbColumn){
-    const innerRow = createCustomElement({tag: "div", classList: ["row", "g-3"]});
-    for (let i  = 0; i < parseInt(nbColumn); i++){
-        const innerCol = createCustomElement({tag: "div",classList: [`col-md-${Math.floor(12 / parseInt(content.dataset.nbColumn))}`]});
-        if (i === 0) innerCol.appendChild(content);
-        innerRow.appendChild(innerCol);
-    };
-    return innerRow;
-};
-
-/**
- * Creates a Bootstrap-style row and fills it with columns based on the number of provided contents.
- * If a content element has a `data-nbColumn` attribute, it will generate a nested row using `createInnerRow`.
- *
- * @function createRowWithColumns
- * @param {HTMLElement[]} contents - An array of DOM elements to be placed inside columns.
- * @returns {HTMLElement} A <div> element with the "row" class containing the appropriate columns.
- */
-export function createRowWithColumns(contents){
-    const row = createCustomElement({tag: "div", classList: ["row", "g-3"]});
-    contents.forEach(content => {
-        const column = createCustomElement({tag: "div", classList: [`col-md-${Math.floor(12 / contents.length)}`]});
-        if (content.dataset.nbColumn){
-            const innerRow = createInnerRow(content, content.dataset.nbColumn);
-            column.appendChild(innerRow);
-        }else{column.appendChild(content)};
-        row.appendChild(column);
-    });
-    return row;
 };
 
 /**
@@ -127,5 +85,42 @@ export function createInputWithOptions(id, innerText, placeholder, callback, sto
     return wrapper;
 };
 
+/**
+ * Creates a Bootstrap-style row and fills it with columns based on the number of provided contents.
+ * If a content element has a `data-nbColumn` attribute, it will generate a nested row using `createInnerRow`.
+ *
+ * @function createRowWithColumns
+ * @param {HTMLElement[]} contents - An array of DOM elements to be placed inside columns.
+ * @returns {HTMLElement} A <div> element with the "row" class containing the appropriate columns.
+ */
+export function createRowWithColumns(contents){
+    const row = createCustomElement({tag: "div", classList: ["row", "g-3"]});
+    contents.forEach(content => {
+        const column = createCustomElement({tag: "div", classList: [`col-md-${Math.floor(12 / contents.length)}`]});
+        if (content.dataset.nbColumn){
+            const innerRow = createInnerRow(content, content.dataset.nbColumn);
+            column.appendChild(innerRow);
+        }else{column.appendChild(content)};
+        row.appendChild(column);
+    });
+    return row;
+};
 
-
+/**
+ * Creates an inner Bootstrap-style row with a specified number of columns .
+ * The content is inserted into the first column.
+ *
+ * @function createInnerRow
+ * @param {HTMLElement[]} contents - An array of DOM elements to be placed inside columns.
+ * @param {string} nbOfColumn - The number of inner columns.
+ * @returns {HTMLElement} A <div> element with the "row" class containing nested columns.
+ */
+function createInnerRow(content, nbColumn){
+    const innerRow = createCustomElement({tag: "div", classList: ["row", "g-3"]});
+    for (let i  = 0; i < parseInt(nbColumn); i++){
+        const innerCol = createCustomElement({tag: "div",classList: [`col-md-${Math.floor(12 / parseInt(content.dataset.nbColumn))}`]});
+        if (i === 0) innerCol.appendChild(content);
+        innerRow.appendChild(innerCol);
+    };
+    return innerRow;
+};

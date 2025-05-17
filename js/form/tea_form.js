@@ -1,9 +1,7 @@
-import * as utils from "../utils.js";
 import * as dom_helpers from "../dom_helpers.js";
 import * as field_behaviors from "./field_behaviors.js";
 import * as validator from "./validator.js";
 import * as storage from "./storage.js";
-
 
 /**
  * TeaForm dynamically builds and manages a localized tea form interface.
@@ -12,34 +10,32 @@ import * as storage from "./storage.js";
  * @class TeaForm
  */
 export class TeaForm {
-
     /**
      * Initializes a new instance of TeaForm for the specified language.
      *
      * @constructor
      * @param {string} lang - The language code used to localize labels and placeholders.
      */
-    constructor(lang){
+    constructor(lang, config){
         this.lang = lang;
+        this.object = config.object
+        this.fields = config.fields;
+        this.UILabels = config.UILabels[this.lang];
         this.form = dom_helpers.createCustomElement({ tag: "form", autocomplete: "off" });
-        this.config = null;
-        this.UILabels = null;
     };
 
     /**
-     * Builds a form field based on its configuration, choosing the appropriate input type and label.
+     * Builds the form UI asynchronously by loading configuration and generating fields and buttons.
      *
-     * @param {Object} field - The field configuration object.
-     * @returns {HTMLElement} A DOM element representing the constructed field.
+     * @async
+     * @method build
+     * @returns {Promise<HTMLElement>} The fully assembled form element.
      */
-    buildField(field){
-        const label = field.label[this.lang];
-        const placeholder = `${this.UILabels.inputPrefix} ${label.toLowerCase()}`;
-        const labelText = `${label} :`;
-        if (field.otherId) return dom_helpers.createInputWithOptions(field.id, labelText, placeholder,(wrapper, options, id, placeholder, otherId) => field_behaviors.oneChoice(wrapper, options, id, placeholder, otherId, this.UILabels.other),field.storageKey, field.otherId);
-        else if (field.choiceId) return dom_helpers.createInputWithOptions(field.id, labelText, placeholder,(wrapper, options, id, placeholder) => field_behaviors.multipleChoice(wrapper, options, id, placeholder, field.choiceId, this.UILabels.add, this.UILabels.other), field.storageKey);
-        else if (field.textarea) return dom_helpers.createtextareaField(field.id, labelText, field.textarea);
-        else return dom_helpers.createInputField(field.id, labelText, placeholder);
+    build(){
+        const rows = this.fields.map(fields => this.buildFieldRow(fields));
+        rows.push(this.buildSubmitButton());
+        this.form.append(...rows);
+        return this.form;
     };
 
     /**
@@ -59,12 +55,19 @@ export class TeaForm {
     };
 
     /**
-     * Resets the form inputs and removes badges or readonly values.
+     * Builds a form field based on its configuration, choosing the appropriate input type and label.
+     *
+     * @param {Object} field - The field configuration object.
+     * @returns {HTMLElement} A DOM element representing the constructed field.
      */
-    resetForm(){
-        this.form.reset();
-        this.form.querySelectorAll(".badge, .chip").forEach(el => el.remove());
-        this.form.querySelectorAll("input[readonly]").forEach(input => {input.value = ""});
+    buildField(field){
+        const label = field.label[this.lang];
+        const placeholder = `${this.UILabels.inputPrefix} ${label.toLowerCase()}`;
+        const labelText = `${label} :`;
+        if (field.otherId) return dom_helpers.createInputWithOptions(field.id, labelText, placeholder,(wrapper, options, id, placeholder, otherId) => field_behaviors.oneChoice(wrapper, options, id, placeholder, otherId, this.UILabels.other),field.storageKey, field.otherId);
+        else if (field.choiceId) return dom_helpers.createInputWithOptions(field.id, labelText, placeholder,(wrapper, options, id, placeholder) => field_behaviors.multipleChoice(wrapper, options, id, placeholder, field.choiceId, this.UILabels.add, this.UILabels.other), field.storageKey);
+        else if (field.textarea) return dom_helpers.createtextareaField(field.id, labelText, field.textarea);
+        else return dom_helpers.createInputField(field.id, labelText, placeholder);
     };
 
     /**
@@ -81,7 +84,7 @@ export class TeaForm {
                 this.form.reportValidity();
                 return;
             };
-            await storage.storeDataIfNew(storage.structureDataToStore(values));
+            await storage.storeDataIfNew(storage.structureDataToStore(values), this.object);
             storage.updateLocalStorage(storageUpdates);
             this.resetForm();
         });
@@ -97,7 +100,7 @@ export class TeaForm {
         let formValid = true; 
         const values = [];
         const storageUpdates = [];
-        const fieldMap = Object.assign({}, ...this.config.fields.map(row => ({ ...row })));
+        const fieldMap = Object.assign({}, ...this.fields.map(row => ({ ...row })));
         Object.values(fieldMap).forEach(field => {
             const input = document.getElementById(field.id);
             let result;
@@ -116,18 +119,11 @@ export class TeaForm {
     };
 
     /**
-     * Builds the form UI asynchronously by loading configuration and generating fields and buttons.
-     *
-     * @async
-     * @returns {Promise<HTMLElement>} The fully assembled form element.
+     * Resets the form inputs and removes badges or readonly values.
      */
-    async build(){
-        const { config, UILabels } = await utils.loadFormConfig(this.lang);
-        this.config = config;
-        this.UILabels = UILabels;
-        const rows = this.config.fields.map(fields => this.buildFieldRow(fields));
-        rows.push(this.buildSubmitButton());
-        this.form.append(...rows);
-        return this.form;
-    }
-}
+    resetForm(){
+        this.form.reset();
+        this.form.querySelectorAll(".badge, .chip").forEach(el => el.remove());
+        this.form.querySelectorAll("input[readonly]").forEach(input => {input.value = ""});
+    };
+};
