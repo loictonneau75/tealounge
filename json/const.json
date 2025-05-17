@@ -1,7 +1,10 @@
 {
     "siteName": "tea_loundge",
     "version": "1.0.0",
-    "object": "tea",
+    "object": {
+        "en": "tea",
+        "fr": "thé"
+    },
     "fields":[{
         "name": {
             "id": "nameId",
@@ -84,14 +87,16 @@
             "add": "Ajouter",
             "send": "Envoyer",
             "errormsg": "Merci d'insérer une valeur.",
-            "other": "Autre"
+            "other": "Autre",
+            "yours" : "vos"
         },
         "en":{
             "inputPrefix": "Type a",
             "add": "Add",
             "send": "Send",
             "errormsg": "Please insert a value.",
-            "other": "Other"
+            "other": "Other",
+            "yours" : "your"
         }
         }
 

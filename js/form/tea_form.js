@@ -18,7 +18,7 @@ export class TeaForm {
      */
     constructor(lang, config){
         this.lang = lang;
-        this.object = config.object
+        this.object = config.object[this.lang]
         this.fields = config.fields;
         this.UILabels = config.UILabels[this.lang];
         this.form = dom_helpers.createCustomElement({ tag: "form", autocomplete: "off" });
@@ -27,7 +27,6 @@ export class TeaForm {
     /**
      * Builds the form UI asynchronously by loading configuration and generating fields and buttons.
      *
-     * @async
      * @method build
      * @returns {Promise<HTMLElement>} The fully assembled form element.
      */

@@ -35,12 +35,15 @@ function setupDoc(sitename){
  * @param {string} title - The title to display above the form.
  * @returns {Promise<HTMLElement>} A DOM element containing the full page layout with the form.
  */
-async function createPage(config){
+function createPage(config){
+    let lang = "fr"
     const h1 = dom_helpers.createCustomElement({tag: "h1", innerText: utils.toLineBreak(config.siteName), classList: ["text-center", "display-custom"]});
-    const form = new TeaForm.TeaForm("fr", config);
+    const h2 = dom_helpers.createCustomElement({tag: "h2", innerText: utils.capitalize(`${config.UILabels[lang].yours} ${config.object[lang]}`), classList: ["h2"]});
+    const form = new TeaForm.TeaForm(lang, config);
     const formWrapper = dom_helpers.createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5"]});
-    formWrapper.append(h1, await form.build());
+    formWrapper.append(h1, form.build());
     const carouselWrapper = dom_helpers.createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5"]})
+    carouselWrapper.append(h2)
     const MainWrapper = document.createElement("div");
     MainWrapper.append(formWrapper, carouselWrapper);
     return MainWrapper;
