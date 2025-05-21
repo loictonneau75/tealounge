@@ -1,6 +1,7 @@
 import * as utils from "./utils.js";
 import * as dom_helpers from "./dom_helpers.js";
 import * as TeaForm from "./form/tea_form.js";
+import * as Carrousel from "./visualisation/carrousel.js";
 
 
 /**
@@ -39,11 +40,16 @@ function createPage(config){
     let lang = "fr"
     const h1 = dom_helpers.createCustomElement({tag: "h1", innerText: utils.toLineBreak(config.siteName), classList: ["text-center", "display-custom"]});
     const h2 = dom_helpers.createCustomElement({tag: "h2", innerText: utils.capitalize(`${config.UILabels[lang].yours} ${config.object[lang]}`), classList: ["h2"]});
+
     const form = new TeaForm.TeaForm(lang, config);
     const formWrapper = dom_helpers.createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5"]});
     formWrapper.append(h1, form.build());
-    const carouselWrapper = dom_helpers.createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5"]})
-    carouselWrapper.append(h2)
+
+    
+    const carouselWrapper = dom_helpers.createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5", "border", "border-dark"]}) //todo remove  "border", "border-dark"
+    const carrousel = new Carrousel.Carrousel(config);
+    carouselWrapper.append(h2, carrousel.build())
+
     const MainWrapper = document.createElement("div");
     MainWrapper.append(formWrapper, carouselWrapper);
     return MainWrapper;

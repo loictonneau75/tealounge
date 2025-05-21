@@ -1,5 +1,4 @@
-import * as storage from "./form/storage.js";
-
+import * as storage from "./storage.js";
 /**
  * Creates and returns a customized DOM element with various optional attributes.
  *

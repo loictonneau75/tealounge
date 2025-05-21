@@ -1,7 +1,7 @@
 import * as dom_helpers from "../dom_helpers.js";
 import * as field_behaviors from "./field_behaviors.js";
 import * as validator from "./validator.js";
-import * as storage from "./storage.js";
+import * as storage from "../storage.js";
 
 /**
  * TeaForm dynamically builds and manages a localized tea form interface.
@@ -18,7 +18,7 @@ export class TeaForm {
      */
     constructor(lang, config){
         this.lang = lang;
-        this.object = config.object[this.lang]
+        this.object = config.object.en
         this.fields = config.fields;
         this.UILabels = config.UILabels[this.lang];
         this.form = dom_helpers.createCustomElement({ tag: "form", autocomplete: "off" });

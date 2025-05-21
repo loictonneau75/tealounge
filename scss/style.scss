@@ -71,8 +71,7 @@ body{
 .missing-value {
     border: 2px solid map-get($custom-colors, "custom-error");
     color: map-get($custom-colors, "custom-error");
-  
     &::placeholder {
-      color: map-get($custom-colors, "custom-error");
+        color: map-get($custom-colors, "custom-error");
     }
-  }
+}

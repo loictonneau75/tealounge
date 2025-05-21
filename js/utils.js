@@ -55,3 +55,13 @@ export function requiredParam(paramName){
 export function capitalize(str){
     return String(str[0]).toUpperCase() + String(str).slice(1);
 };
+
+export function buildFieldMapFromGroups(fields){
+    const map = {};
+    fields.forEach(group => {
+        Object.entries(group).forEach(([key, val]) => {
+            map[key] = val;
+        });
+    });
+    return map
+}

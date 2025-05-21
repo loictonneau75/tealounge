@@ -21,8 +21,7 @@
             "otherId": "otherTypeId",
             "storageKey": "typesAvailable",
             "required": true,
-            "cardPosition": "header",
-            "cardRole": "subtitle",
+            "cardPosition": "body",
             "label": {
                 "fr": "Type",
                 "en": "Type"
@@ -35,8 +34,8 @@
             "otherId": "otherBrandId",
             "storageKey": "brandsAvailable",
             "required": false,
-            "cardPosition": "body",
-            "cardRole": "text",
+            "cardPosition": "header",
+            "cardRole": "subtitle",
             "label": {
                 "fr": "Marque",
                 "en": "Brand"
@@ -48,7 +47,6 @@
             "storageKey": "ingredientsAvailable",
             "required": true,
             "cardPosition": "body",
-            "cardRole": "text",
             "label": {
                 "fr": "Ingrédient",
                 "en": "Ingredient"
@@ -61,8 +59,7 @@
             "storageKey": "adjectivesAvailable",
             "nbColumn": 2,
             "required": false,
-            "cardPosition": "body",
-            "cardRole": "text",
+            "cardPosition": "footer",
             "label": {
                 "fr": "Adjectif",
                 "en": "Adjective"
@@ -73,8 +70,7 @@
             "id": "commentId",
             "textarea": 4,
             "required": false,
-            "cardPosition": "footer",
-            "cardRole": "text",
+            "cardPosition": "body",
             "label": {
                 "fr": "Commentaire",
                 "en": "Comment"
