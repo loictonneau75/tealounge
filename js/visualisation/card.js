@@ -7,7 +7,7 @@ export class Card {
     }
 
     build(){
-        const card = domHelper.createCustomElement({tag: "div", classList: ["card"]});
+        const card = domHelper.createCustomElement({tag: "div", classList: ["card", "m-2"]});
         const sections = {
             header : this.buildSection("header"),
             body: this.buildSection("body"),

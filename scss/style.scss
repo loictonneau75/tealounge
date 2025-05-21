@@ -75,3 +75,12 @@ body{
         color: map-get($custom-colors, "custom-error");
     }
 }
+
+.card-body{
+    display: flex;
+    flex-direction: column;
+    p:last-child {
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+}
