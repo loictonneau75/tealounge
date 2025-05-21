@@ -41,7 +41,8 @@ export function validateStandardField(input, required){
         return { valid: false, value: null };
     }
     input.setCustomValidity("");
-    return { valid: true, value: input.value.trim() };
+    let value = input.value.trim() !== "" ? input.value.trim() : null;
+    return { valid: true, value };
 };
 
 /**
@@ -80,7 +81,9 @@ export function validateChoiceField(input, choiceId, required){
  * @returns {{ valid: boolean, value: string|null }} An object indicating validity and the extracted value, if valid.
  */
 export function validateOtherField(input, otherId, required, other){
-    if (input.value.trim() !== other){return validateStandardField(input, required)};
+    if (input.value.trim() !== other){
+        return validateStandardField(input, required)
+    };
     const otherInput = document.getElementById(otherId);
     const value = otherInput.value.trim();
     if (required && !value){

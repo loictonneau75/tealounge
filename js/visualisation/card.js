@@ -20,7 +20,7 @@ export class Card {
     buildSection(sectionName) {
         const section = domHelper.createCustomElement({ tag: "div", classList: [`card-${sectionName}`] });
         for (const key in this.data) {
-            const field = this.fieldMap[key];
+            const field = this.fieldMap[key.toLowerCase()];
             if (!field || field.cardPosition !== sectionName) continue;
             const element = this.buildElementForField(field, this.data[key]);
             section.appendChild(element);

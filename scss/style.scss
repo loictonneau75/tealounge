@@ -84,3 +84,24 @@ body{
         margin-bottom: auto;
     }
 }
+
+.carrousel-container {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto; // permet de scroller horizontalement
+    scroll-snap-type: x mandatory;
+    gap: 1rem;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.carrousel-item {
+    flex: 0 0 calc(100% / 3); // affichera 3 cartes à la fois
+    scroll-snap-align: start;
+    box-sizing: border-box;
+}
+
+.carrousel-item > * {
+    height: 100%;
+    width: 100%;
+}

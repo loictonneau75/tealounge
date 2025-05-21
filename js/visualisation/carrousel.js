@@ -5,7 +5,7 @@ import * as Card from "./card.js"
 
 export class Carrousel {
     constructor(config ,option = {slidesVisible: 3, slidetoScroll: 1}){
-        this.div = domHelper.createCustomElement({tag: "div", classList: ["border", "border-warning"]})
+        this.div = domHelper.createCustomElement({tag: "div", classList: ["carrousel-container"]})
         this.config = config
         this.option = option
         this.fieldMap = utils.buildFieldMapFromGroups(this.config.fields)
@@ -16,12 +16,12 @@ export class Carrousel {
         storage.getDataFromLocalStorage(this.config.object.en).forEach(object => {
             //todo rajouter le trieur ici
             const card = new Card.Card(object, this.fieldMap)
-            const itemDiv = domHelper.createCustomElement({tag: "div", classList:["border", "border-info"]})//todo retirer classlist
+            const itemDiv = domHelper.createCustomElement({tag: "div", classList:["carrousel-item"]})
             itemDiv.appendChild(card.build())
             this.div.appendChild(itemDiv)
             cardDivList.push(itemDiv)
         });
-
+        
         requestAnimationFrame(() => {
             let maxHeight = 0
             cardDivList.forEach(cardDiv => {

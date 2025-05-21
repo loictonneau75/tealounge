@@ -1,5 +1,3 @@
-import * as utils from "./utils.js";
-
 /**
  * Retrieves and parses data from localStorage for a given key.
  *
