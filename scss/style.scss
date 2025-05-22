@@ -96,9 +96,9 @@ body{
 }
 
 .carrousel-item {
-    flex: 0 0 calc(100% / 3); // affichera 3 cartes à la fois
     scroll-snap-align: start;
     box-sizing: border-box;
+    flex: 0 0 auto;
 }
 
 .carrousel-item > * {

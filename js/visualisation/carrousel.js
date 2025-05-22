@@ -11,25 +11,45 @@ export class Carrousel {
         this.fieldMap = utils.buildFieldMapFromGroups(this.config.fields)
     };
 
+
+    /**
+     * Important ⚠️ : Toujours définir une valeur initiale de `flex` dans le CSS (SCSS)
+     * avant de la modifier dynamiquement en JavaScript.
+     *
+     * Raison :
+     * Le moteur de rendu du navigateur doit d’abord reconnaître les éléments comme
+     * des "flex items" pour que les calculs de taille, d’alignement et de disposition
+     * fonctionnent correctement. Si aucun `flex` n’est défini au départ, appliquer
+     * `element.style.flex = ...` peut ne pas produire l’effet attendu ou casser le layout.
+     *
+     * Exemple :
+     * En SCSS :
+     *   .carrousel-item {
+     *     flex: 0 0 auto; // Initialise le contexte flex
+     *   }
+     *
+     * Puis en JS :
+     *   itemDiv.style.flex = `0 0 calc(100% / ${slidesVisible})`; // Appliqué proprement
+     */
     build() {
-        let cardDivList = []
+        let itemDivList = []
         storage.getDataFromLocalStorage(this.config.object.en).forEach(object => {
             //todo rajouter le trieur ici
             const card = new Card.Card(object, this.fieldMap)
             const itemDiv = domHelper.createCustomElement({tag: "div", classList:["carrousel-item"]})
             itemDiv.appendChild(card.build())
             this.div.appendChild(itemDiv)
-            cardDivList.push(itemDiv)
+            itemDivList.push(itemDiv)
         });
         
         requestAnimationFrame(() => {
             let maxHeight = 0
-            cardDivList.forEach(cardDiv => {
-                cardDiv.style.width = ((1 / this.option.slidesVisible) * 100) + "%"
+            itemDivList.forEach(cardDiv => {
+                cardDiv.style.flex = `0 0 ${(100/this.option.slidesVisible)}%`
                 cardDiv.style.height = "auto"
                 if (cardDiv.offsetHeight > maxHeight) maxHeight = cardDiv.offsetHeight
             })
-            cardDivList.forEach(card => {
+            itemDivList.forEach(card => {
                 card.children[0].style.height = maxHeight + "px"
             })
         })
