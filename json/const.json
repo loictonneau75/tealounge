@@ -85,7 +85,9 @@
             "send": "Envoyer",
             "errormsg": "Merci d'insérer une valeur.",
             "other": "Autre",
-            "yours" : "vos"
+            "yours" : "vos",
+            "delete": "Suprimé",
+            "edit": "Modifié"
         },
         "en":{
             "flag": "img/flag/eng.svg",
@@ -94,7 +96,9 @@
             "send": "Send",
             "errormsg": "Please insert a value.",
             "other": "Other",
-            "yours" : "your"
+            "yours" : "your",
+            "delete": "Delete",
+            "edit": "Edit"
         }
         }
 

@@ -18,7 +18,7 @@ window.onload = async () => {
     const storedLang = localStorage.getItem("lang") || "fr";
 
     setupDoc(utils.snakeToTitleCase(config.siteName));
-    document.body.append(await createPage(config, storedLang));
+    document.body.append(createPage(config, storedLang));
 };
 
 /**
@@ -60,10 +60,10 @@ function createPage(config, lang){
 function createCarousel(config, lang){
     const title = dom_helpers.createCustomElement({tag: "h2", innerText: utils.capitalize(`${config.UILabels[lang].yours} ${config.object[lang]}`), classList: ["h2"]});
     const wrapper = dom_helpers.createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5",]})
-    wrapper.append(title, new Carousel.Carousel( new Cards.Cards(config)))
+    wrapper.append(title, new Carousel.Carousel( new Cards.Cards(config, lang)))
     window.addEventListener("resize", () => {
         wrapper.innerHTML = ""
-        wrapper.append(title, new Carousel.Carousel( new Cards.Cards(config)))
+        wrapper.append(title, new Carousel.Carousel( new Cards.Cards(config, lang)))
     })
     return wrapper
 }

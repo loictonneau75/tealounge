@@ -1,4 +1,4 @@
-import * as domHelper from "../utils/dom_helpers.js";
+import * as domHelpers from "../utils/dom_helpers.js";
 import * as storage from "../utils/storage.js";
 import * as utils from "../utils/utils.js"
 
@@ -12,10 +12,12 @@ export class Cards {
      * @param {Object} config - Configuration object used to build the cards.
      * @param {Object[]} config.fields - Array of field definitions grouped by section.
      * @param {Object} config.object - Object containing localization keys (e.g. `en`) for localStorage access.
+     * @param {string} lang - The selected language code for localization.
      * @returns {HTMLElement[]} An array of generated card elements.
      */
-    constructor(config){
+    constructor(config, lang){
         this.config = config;
+        this.lang = lang
         this.cards = [];
         this.fieldMap = utils.buildFieldMapFromGroups(this.config.fields);
         this.buildcard();
@@ -28,14 +30,18 @@ export class Cards {
      */
     buildcard(){
         storage.getDataFromLocalStorage(this.config.object.en).forEach(object => {
-            const cardDiv = domHelper.createCustomElement({tag: "div"});
-            const card = domHelper.createCustomElement({tag: "div", classList: ["card", "m-2"]});
+            const cardDiv = domHelpers.createCustomElement({tag: "div"});
+            const card = domHelpers.createCustomElement({tag: "div", classList: ["card", "m-2"]});
             const sections = {
                 header : this.buildSection("header", object),
                 body: this.buildSection("body", object),
                 footer: this.buildSection("footer", object),
             };
-            Object.values(sections).forEach(section => {if (section.hasChildNodes()) card.appendChild(section)});
+            Object.values(sections).forEach(section => { card.appendChild(section)});
+            console.log(this.config.UILabels[this.lang].delete)
+            const deleteBtn = domHelpers.createCustomElement({tag: "button", innerText: this.config.UILabels[this.lang].delete, classList: ["btn", "btn-custom-secondary", "m-1"]})
+            const editBtn = domHelpers.createCustomElement({tag: "button", innerText: this.config.UILabels[this.lang].edit, classList: ["btn", "btn-custom-secondary", "m-1"]})
+            sections.footer.append(deleteBtn, editBtn)
             cardDiv.appendChild(card);
             this.cards.push(cardDiv);
         });
@@ -48,7 +54,7 @@ export class Cards {
      * @returns {HTMLElement} The generated section element.
      */
     buildSection(sectionName, object) {
-        const section = domHelper.createCustomElement({ tag: "div", classList: [`card-${sectionName}`] });
+        const section = domHelpers.createCustomElement({ tag: "div", classList: [`card-${sectionName}`] });
         for (const key in object) {
             const field = this.fieldMap[key.toLowerCase()];
             if (!field || field.cardPosition !== sectionName) continue;
@@ -77,7 +83,7 @@ export class Cards {
             tag = "p";
             classList = ["card-text"];
         }
-        const element = domHelper.createCustomElement({ tag, classList });
+        const element = domHelpers.createCustomElement({ tag, classList });
         element.textContent = Array.isArray(value) ? value.join(", ") : value;
         return element;
     }
