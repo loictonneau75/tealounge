@@ -56,8 +56,8 @@ body{
     }
     &-next, &-prev{
         position: absolute;
-        width: $navigationSize*1;
-        height: $navigationSize*1;
+        width: $navigationSize;
+        height: $navigationSize;
         background: map-get($custom-colors , "custom-secondary" ) url("../img/arrow.svg") center center no-repeat;
         background-size: $navigationSize $navigationSize;
         border-radius: 50%;

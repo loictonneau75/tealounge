@@ -1,6 +1,6 @@
-import * as domHelper from "../dom_helpers.js";
-import * as storage from "../storage.js";
-import * as utils from "../utils.js"
+import * as domHelper from "../utils/dom_helpers.js";
+import * as storage from "../utils/storage.js";
+import * as utils from "../utils/utils.js"
 
 /**
  * Class responsible for generating HTML cards from a configuration object

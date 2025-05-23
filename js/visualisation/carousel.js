@@ -1,4 +1,4 @@
-import * as domHelpers from "../dom_helpers.js";
+import * as domHelpers from "../utils/dom_helpers.js";
 
 /**
  * A responsive and optionally infinite carousel with pagination and navigation controls.

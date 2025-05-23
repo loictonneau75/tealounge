@@ -1,7 +1,7 @@
-import * as dom_helpers from "../dom_helpers.js";
+import * as dom_helpers from "../utils/dom_helpers.js";
 import * as field_behaviors from "./field_behaviors.js";
 import * as validator from "./validator.js";
-import * as storage from "../storage.js";
+import * as storage from "../utils/storage.js";
 
 /**
  * TeaForm dynamically builds and manages a localized tea form interface.

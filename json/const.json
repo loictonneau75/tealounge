@@ -79,6 +79,7 @@
     }],
     "UILabels":{
         "fr":{
+            "flag": "img/flag/fr.svg",
             "inputPrefix": "Entrez un",
             "add": "Ajouter",
             "send": "Envoyer",
@@ -87,6 +88,7 @@
             "yours" : "vos"
         },
         "en":{
+            "flag": "img/flag/eng.svg",
             "inputPrefix": "Type a",
             "add": "Add",
             "send": "Send",

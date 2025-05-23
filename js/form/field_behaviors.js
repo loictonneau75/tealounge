@@ -1,5 +1,5 @@
-import * as utils from "../utils.js";
-import * as dom_helpers from "../dom_helpers.js";
+import * as utils from "../utils/utils.js";
+import * as dom_helpers from "../utils/dom_helpers.js";
 
 
 /**

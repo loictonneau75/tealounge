@@ -1,5 +1,5 @@
-import * as utils from "./utils.js";
-import * as dom_helpers from "./dom_helpers.js";
+import * as utils from "./utils/utils.js";
+import * as dom_helpers from "./utils/dom_helpers.js";
 import * as TeaForm from "./form/tea_form.js";
 import * as Carousel from "./visualisation/carousel.js";
 import * as Cards from "./visualisation/cards.js"
@@ -15,8 +15,10 @@ import * as Cards from "./visualisation/cards.js"
  */
 window.onload = async () => {
     const config = await utils.getConfigValue();
+    const storedLang = localStorage.getItem("lang") || "fr";
+
     setupDoc(utils.snakeToTitleCase(config.siteName));
-    document.body.append(await createPage(config));
+    document.body.append(await createPage(config, storedLang));
 };
 
 /**
@@ -30,31 +32,76 @@ function setupDoc(sitename){
 };
 
 /**
- * Asynchronously creates a page section containing a title and a built tea form.
+ * Assembles and returns the main page layout including language selection, form, and carousel.
  *
- * @async
  * @function createPage
- * @param {string} title - The title to display above the form.
- * @returns {Promise<HTMLElement>} A DOM element containing the full page layout with the form.
+ * @param {Object} config - The site configuration object loaded at startup.
+ * @param {string} lang - The current language code (e.g., "fr", "en").
+ * @returns {HTMLElement} The main wrapper element containing all page sections.
  */
-function createPage(config){
-    let lang = "fr"
-    const h1 = dom_helpers.createCustomElement({tag: "h1", innerText: utils.toLineBreak(config.siteName), classList: ["text-center", "display-custom"]});
-    const h2 = dom_helpers.createCustomElement({tag: "h2", innerText: utils.capitalize(`${config.UILabels[lang].yours} ${config.object[lang]}`), classList: ["h2"]});
-
-    const formWrapper = dom_helpers.createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5"]});
-    formWrapper.append(h1, new TeaForm.TeaForm(lang, config));
-
-    
-    const carouselWrapper = dom_helpers.createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5",]})
-    carouselWrapper.append(h2, new Carousel.Carousel( new Cards.Cards(config)))
-    window.addEventListener("resize", () => {
-        carouselWrapper.innerHTML = ""
-        carouselWrapper.append(h2, new Carousel.Carousel( new Cards.Cards(config)))
-    })
-    
-
+function createPage(config, lang){
+    const flagDiv = chooseLang(config, lang);
+    const formWrapper = createForm(config, lang)
+    const carouselWrapper = createCarousel(config, lang)
     const MainWrapper = dom_helpers.createCustomElement({tag:"div"})
-    MainWrapper.append(formWrapper, carouselWrapper);
+    MainWrapper.append(flagDiv, formWrapper, carouselWrapper);
     return MainWrapper;
 };
+
+/**
+ * Creates a wrapper containing the carousel section with a localized title.
+ * Automatically re-renders the carousel on window resize.
+ *
+ * @function createCarousel
+ * @param {Object} config - The configuration object containing UI labels and object names.
+ * @param {string} lang - The selected language code for localization.
+ * @returns {HTMLElement} A DOM element containing the carousel and its title.
+ */
+function createCarousel(config, lang){
+    const title = dom_helpers.createCustomElement({tag: "h2", innerText: utils.capitalize(`${config.UILabels[lang].yours} ${config.object[lang]}`), classList: ["h2"]});
+    const wrapper = dom_helpers.createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5",]})
+    wrapper.append(title, new Carousel.Carousel( new Cards.Cards(config)))
+    window.addEventListener("resize", () => {
+        wrapper.innerHTML = ""
+        wrapper.append(title, new Carousel.Carousel( new Cards.Cards(config)))
+    })
+    return wrapper
+}
+
+/**
+ * Creates a wrapper containing the main form section, including the title and the TeaForm instance.
+ *
+ * @function createForm
+ * @param {Object} config - The configuration object providing form and UI data.
+ * @param {string} lang - The selected language code for rendering the form in the correct language.
+ * @returns {HTMLElement} A DOM element containing the form layout.
+ */
+function createForm(config, lang){
+    const title = dom_helpers.createCustomElement({tag: "h1", innerText: utils.toLineBreak(config.siteName), classList: ["text-center", "display-custom"]});
+    const wrapper = dom_helpers.createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5"]});
+    wrapper.append(title, new TeaForm.TeaForm(lang, config));
+    return wrapper
+}
+
+/**
+ * Creates a language selector using flags and updates the language preference in localStorage.
+ * Rebuilds the page in the selected language when a flag is clicked.
+ *
+ * @function chooseLang
+ * @param {Object} config - The configuration object containing UI labels and flag paths for each language.
+ * @returns {HTMLElement} A DOM element containing all language flags.
+ */
+function chooseLang(config){
+    const div = dom_helpers.createCustomElement({tag:"div", classList: ["flag-container"]})
+    for (const lang in config.UILabels){
+        const flag = config.UILabels[lang].flag;
+        const img = dom_helpers.createCustomElement({tag:"img", attributes: {src: flag, alt: lang, title: lang}, classList:["flag-icon"]})
+        img.addEventListener("click", async () => {
+            localStorage.setItem("lang", lang);
+            document.body.innerHTML = "";
+            document.body.append(await createPage(config, lang));
+        })
+        div.appendChild(img)
+    }
+    return div
+}

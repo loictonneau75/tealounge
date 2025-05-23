@@ -1,33 +1,26 @@
 import * as storage from "./storage.js";
+import * as utils from "./utils.js"
+
+
 /**
- * Creates and returns a customized DOM element with various optional attributes.
+ * Creates and returns a customized DOM element with various optional attributes and properties.
  *
  * @function createCustomElement
- * @param {string} tag - The HTML tag name of the element (required).
- * @param {Object} options - Configuration options for the element.
- * @param {string} [options.innerText] - The innerText of the element.
- * @param {string[]} [options.classList] - An array of class names to add to the element.
- * @param {string} [options.id] - The ID to assign to the element.
- * @param {string} [options.autocomplete] - The autocomplete attribute.
- * @param {string} [options.htmlFor] - The htmlFor attribute (for labels).
- * @param {string} [options.type] - The type attribute (e.g., for inputs or buttons).
- * @param {string} [options.placeholder] - The placeholder text.
- * @param {string} [options.value] - The value of the element.
- * @param {string} [options.textContent] - The text content of the element.
- * @param {boolean} [options.hidden] - Whether the element is hidden.
- * @param {boolean} [options.selected] - Whether the element is selected.
- * @param {boolean} [options.readOnly] - Whether the element is read-only.
- * @returns {HTMLElement} The newly created and configured DOM element.
- * @throws {Error} If the `tag` parameter is not provided.
+ * @param {Object} options - Configuration for the element.
+ * @param {string} options.tag - The HTML tag name (required).
+ * @param {string[]} [options.classList] - CSS classes to add.
+ * @param {Object} [options.attributes] - Attributes to set with setAttribute (e.g. { src: "...", alt: "..." }).
+ * @returns {HTMLElement} The created and configured DOM element.
+ * @throws {Error} If the `tag` is not provided.
  */
-export function createCustomElement({tag = utils.requiredParam("tag"), innerText = null, classList = [], id = null, autocomplete = null, htmlFor = null, type = null, placeholder = null, value = null, textContent = null, hidden = null, selected = null, readOnly = null}){
+export function createCustomElement({tag = utils.requiredParam("tag"), classList = [], attributes = {}, ...props}) {
     const element = document.createElement(tag);
     if (classList.length) element.classList.add(...classList);
-    for (const [key, val] of Object.entries(arguments[0])){
-        if (!["tag", "classList"].includes(key) && val !== null && val !== undefined) element[key] = val;
-    };
+    for (const [key, val] of Object.entries(props)) if (val !== null && val !== undefined) element[key] = val;
+    for (const [attr, val] of Object.entries(attributes)) if (val !== null && val !== undefined) element.setAttribute(attr, val);
     return element;
-};
+}
+
 
 /**
  * Creates a labeled text input field wrapped in a Bootstrap form group.
