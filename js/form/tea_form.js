@@ -81,7 +81,8 @@ export class TeaForm {
             };
             await storage.storeDataIfNew(storage.structureDataToStore(values), this.object);
             storage.updateLocalStorage(storageUpdates);
-            this.resetForm();
+            //todo changer location.reload()
+            location.reload();
         });
         return submitBtn;
     };
@@ -111,14 +112,5 @@ export class TeaForm {
             };
         });
         return { isValid: formValid, values, storageUpdates };
-    };
-
-    /**
-     * Resets the form inputs and removes badges or readonly values.
-     */
-    resetForm(){
-        this.form.reset();
-        this.form.querySelectorAll(".badge, .chip").forEach(el => el.remove());
-        this.form.querySelectorAll("input[readonly]").forEach(input => {input.value = ""});
     };
 };

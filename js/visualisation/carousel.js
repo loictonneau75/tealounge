@@ -18,13 +18,13 @@ export class Carousel{
      */
     constructor(slides, options = {slidesToScroll: 1, slidesVisible: 3, loop: false, slideIndicator: true, infinite: true}) {
         this.options = options;
-        if (this.options.loop && this.options.infinite) throw new Error("A carousel can't be in loop mode and infinite mode at the same time.");
         this.slides = slides;
         this.currentSlide = 0;
         this.moveCallBacks = [];
         this.offset = 0;
         this.isMobile = false;
         this.slideIndicatorButtons = [];
+        this.validateAndAdjustOptions();
         this.initDOM();
         if (this.options.infinite) this.setupInfiniteScroll();
         this.track.append(...this.slides);
@@ -35,6 +35,21 @@ export class Carousel{
         this.onWindowResize();
         window.addEventListener("resize", this.onWindowResize.bind(this));
         return this.wrapper;
+    }
+
+    /**
+     * Validate and adjust the carousel options based on the number of slides and exclusivity rules.
+     */
+    validateAndAdjustOptions(){
+        if (this.options.loop && this.options.infinite) throw new Error("A carousel can't be in loop mode and infinite mode at the same time.");
+        if (this.options.infinite && (this.slides.length <= this.options.slidesVisible -1)){
+            this.options.slideIndicator = false;
+            this.options.infinite = false
+        }
+        if (this.options.loop && (this.slides.length <= this.options.slidesVisible)){
+            this.options.slideIndicator = false;
+            this.options.loop = false
+        }
     }
 
     /**

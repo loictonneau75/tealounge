@@ -99,7 +99,7 @@ function chooseLang(config){
         img.addEventListener("click", async () => {
             localStorage.setItem("lang", lang);
             document.body.innerHTML = "";
-            document.body.append(await createPage(config, lang));
+            document.body.append(createPage(config, lang));
         })
         div.appendChild(img)
     }

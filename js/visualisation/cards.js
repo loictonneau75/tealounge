@@ -37,15 +37,19 @@ export class Cards {
                 body: this.buildSection("body", object),
                 footer: this.buildSection("footer", object),
             };
-            Object.values(sections).forEach(section => { card.appendChild(section)});
-            console.log(this.config.UILabels[this.lang].delete)
-            const deleteBtn = domHelpers.createCustomElement({tag: "button", innerText: this.config.UILabels[this.lang].delete, classList: ["btn", "btn-custom-secondary", "m-1"]})
-            const editBtn = domHelpers.createCustomElement({tag: "button", innerText: this.config.UILabels[this.lang].edit, classList: ["btn", "btn-custom-secondary", "m-1"]})
-            sections.footer.append(deleteBtn, editBtn)
+            Object.values(sections).forEach(section => {card.appendChild(section)});
+            this.buildActionButton(sections.footer, object)
             cardDiv.appendChild(card);
             this.cards.push(cardDiv);
         });
     };
+
+    buildActionButton(footer, object){
+        const deleteBtn = domHelpers.createCustomElement({tag: "button", innerText: this.config.UILabels[this.lang].delete, classList: ["btn", "btn-custom-secondary", "m-1"]})
+        const editBtn = domHelpers.createCustomElement({tag: "button", innerText: this.config.UILabels[this.lang].edit, classList: ["btn", "btn-custom-secondary", "m-1"]})
+        deleteBtn.addEventListener("click", () => this.deleteCard(object))
+        footer.append(deleteBtn, editBtn)
+    }
 
     /**
      * Builds a section (header, body, or footer) of the card based on object data.
@@ -86,5 +90,13 @@ export class Cards {
         const element = domHelpers.createCustomElement({ tag, classList });
         element.textContent = Array.isArray(value) ? value.join(", ") : value;
         return element;
+    }
+    deleteCard(object){
+        const key = this.config.object.en
+        const allTeas = storage.getDataFromLocalStorage(key);
+        const newTeas = allTeas.filter(t => JSON.stringify(t) !== JSON.stringify(object));
+        localStorage.setItem(key, JSON.stringify(newTeas));
+        //todo changer location.reload()
+        location.reload();
     }
 }

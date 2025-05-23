@@ -1,9 +1,18 @@
-//todo refaire la docstring
+/**
+ * Asynchronously loads and returns configuration data from a JSON file.
+ *
+ * This function fetches the `const.json` file located in the `../json/` directory
+ * and parses it as a JavaScript object. If a network or parsing error occurs,
+ * it logs the error to the console and returns `null`.
+ *
+ * @async
+ * @function getConfigValue
+ * @returns {Promise<Object|null>} A Promise resolving to the configuration object, or `null` if an error occurs.
+ */
 export async function getConfigValue(){
     try{
         const response = await fetch("../json/const.json");
         return await response.json();
-        
     } catch(error){
         console.error("Erreur lors de la récupération du JSON : ", error);
         return null;
