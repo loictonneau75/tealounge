@@ -17,7 +17,6 @@ window.onload = async () => {
     const config = await utils.getConfigValue();
     setupDoc(utils.snakeToTitleCase(config.siteName));
     document.body.append(await createPage(config));
-    window.scroll(0, document.body.scrollHeight) //todo a retiré
 };
 
 /**
