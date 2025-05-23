@@ -48,6 +48,7 @@ export class Cards {
         const deleteBtn = domHelpers.createCustomElement({tag: "button", innerText: this.config.UILabels[this.lang].delete, classList: ["btn", "btn-custom-secondary", "m-1"]})
         const editBtn = domHelpers.createCustomElement({tag: "button", innerText: this.config.UILabels[this.lang].edit, classList: ["btn", "btn-custom-secondary", "m-1"]})
         deleteBtn.addEventListener("click", () => this.deleteCard(object))
+        editBtn.addEventListener("click", () => this.editCard())
         footer.append(deleteBtn, editBtn)
     }
 
@@ -91,6 +92,7 @@ export class Cards {
         element.textContent = Array.isArray(value) ? value.join(", ") : value;
         return element;
     }
+    
     deleteCard(object){
         const key = this.config.object.en
         const allTeas = storage.getDataFromLocalStorage(key);
@@ -98,5 +100,9 @@ export class Cards {
         localStorage.setItem(key, JSON.stringify(newTeas));
         //todo changer location.reload()
         location.reload();
+    }
+
+    editCard(){
+
     }
 }
