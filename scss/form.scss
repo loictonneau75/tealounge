@@ -1,0 +1,28 @@
+.suggestion-scrollable {
+    max-height: 200px;
+}
+
+.caret{
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid map-get($custom-colors, "custom-secondary");
+}
+
+.no-border{
+    border: 0rem;
+}
+
+.missing-value {
+    border: 2px solid map-get($custom-colors, "custom-error");
+    color: map-get($custom-colors, "custom-error");
+    &::placeholder {
+        color: map-get($custom-colors, "custom-error");
+    }
+}

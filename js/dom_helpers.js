@@ -3,8 +3,8 @@ import * as storage from "./storage.js";
  * Creates and returns a customized DOM element with various optional attributes.
  *
  * @function createCustomElement
+ * @param {string} tag - The HTML tag name of the element (required).
  * @param {Object} options - Configuration options for the element.
- * @param {string} options.tag - The HTML tag name of the element (required).
  * @param {string} [options.innerText] - The innerText of the element.
  * @param {string[]} [options.classList] - An array of class names to add to the element.
  * @param {string} [options.id] - The ID to assign to the element.

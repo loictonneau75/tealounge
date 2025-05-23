@@ -34,6 +34,10 @@ $display-font-family: $used-font;
 
 @import "bootstrap/bootstrap.scss";
 
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 body{
     background: {
         image: url($image-url);
@@ -41,67 +45,12 @@ body{
         position: center;
         repeat: no-repeat;
     }
+    background-attachment: fixed;
     height : 100vh;
     margin: 0;
     color: map-get($custom-colors, "custom-secondary");
 }
 
-.suggestion-scrollable {
-    max-height: 200px;
-}
-
-.caret{
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 6px solid map-get($custom-colors, "custom-secondary");
-
-}
-
-.no-border{
-    border: 0rem;
-}
-
-.missing-value {
-    border: 2px solid map-get($custom-colors, "custom-error");
-    color: map-get($custom-colors, "custom-error");
-    &::placeholder {
-        color: map-get($custom-colors, "custom-error");
-    }
-}
-
-.card-body{
-    display: flex;
-    flex-direction: column;
-    p:last-child {
-        margin-top: auto;
-        margin-bottom: auto;
-    }
-}
-
-.carrousel-container {
-    display: flex;
-    flex-direction: row;
-    overflow-x: auto; // permet de scroller horizontalement
-    scroll-snap-type: x mandatory;
-    gap: 1rem;
-    padding: 1rem;
-    box-sizing: border-box;
-}
-
-.carrousel-item {
-    scroll-snap-align: start;
-    box-sizing: border-box;
-    flex: 0 0 auto;
-}
-
-.carrousel-item > * {
-    height: 100%;
-    width: 100%;
-}
+@import "./cards.scss";
+@import "./form.scss";
+@import "./carousel.scss";

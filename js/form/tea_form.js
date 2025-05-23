@@ -16,26 +16,22 @@ export class TeaForm {
      * @constructor
      * @param {string} lang - The language code used to localize labels and placeholders.
      */
-    constructor(lang, config){
+    constructor(lang, config){ //todo changer le jsdoc
         this.lang = lang;
         this.object = config.object.en
         this.fields = config.fields;
         this.UILabels = config.UILabels[this.lang];
         this.form = dom_helpers.createCustomElement({ tag: "form", autocomplete: "off" });
+        this.buildForm()
+        return this.form;
     };
 
-    /**
-     * Builds the form UI asynchronously by loading configuration and generating fields and buttons.
-     *
-     * @method build
-     * @returns {Promise<HTMLElement>} The fully assembled form element.
-     */
-    build(){
+    buildForm(){
         const rows = this.fields.map(fields => this.buildFieldRow(fields));
         rows.push(this.buildSubmitButton());
         this.form.append(...rows);
-        return this.form;
-    };
+    }
+
 
     /**
      * Builds a row of fields and wraps them in Bootstrap columns.

@@ -1,0 +1,88 @@
+$navigationOffSet: -30px;
+$navigationSize: 30px;
+$transitionTime: 0.3s;
+
+body{
+    overflow-x: hidden;
+}
+
+._carousel{
+    position: relative;
+    &-wrapper{
+        position: relative;
+    }
+    &-viewport{
+        overflow: hidden;
+        width: 100%;
+    }
+    &-track{
+        transition: transform $transitionTime;
+        transform: translate3d(0,0,0);
+        &::after{
+            content: '';
+            clear: both;
+            display: table;
+        }
+    }
+    &-slide{
+        float: left;
+        height: auto;
+        &-indicator{
+            position: absolute;
+            z-index: 2;
+            left: 0;
+            right: 0;
+            text-align: center;
+            display: block;
+            &-button{
+                background-color: #fff;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                display: inline-block;
+                margin: 0 3px;
+                transition: transform $transitionTime;
+                &-active{
+                    transform: scale(1.4);
+                }
+                &-hidden{
+                    display: none;
+                }
+                &:hover{
+                    transform: scale(1.4)
+                }
+            }
+        }
+    }
+    &-next, &-prev{
+        position: absolute;
+        width: $navigationSize*1;
+        height: $navigationSize*1;
+        background: map-get($custom-colors , "custom-secondary" ) url("../img/arrow.svg") center center no-repeat;
+        background-size: $navigationSize $navigationSize;
+        border-radius: 50%;
+        top: 50%;
+        margin-top: -20px;
+        cursor: pointer;
+        transition: transform $transitionTime, opacity $transitionTime;
+        &-hidden{
+            opacity: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+        &:hover{
+            transform: scale(1.2);
+        }
+    }
+    &-next{
+        rotate: 180deg;
+        right: $navigationOffSet;
+    }
+    &-prev{
+        left: $navigationOffSet;
+    }
+
+}
+
+
+
