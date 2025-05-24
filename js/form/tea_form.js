@@ -134,19 +134,28 @@ export class TeaForm {
         });
     }
 
-    changeButton(key, cardId){
-    this.submitBtn.remove()
+    changeButton(key, cardId) {
+        this.submitBtn.remove();
         const modifyButton = dom_helpers.createCustomElement({tag: "button", type: "submit", textContent: this.UILabels.edit, classList: ["btn", "btn-custom-secondary", "m-1", "mt-3"]});
         const cancelButton = dom_helpers.createCustomElement({tag: "button", type: "button", textContent: this.UILabels.cancel, classList: ["btn", "btn-custom-secondary", "m-1", "mt-3"]});
-        cancelButton.addEventListener("click", () => {location.reload()})//todo changer location.reload()
-        modifyButton.addEventListener("click", async(e) => {
+        cancelButton.addEventListener("click", () => location.reload());
+        modifyButton.addEventListener("click", async (e) => {
             e.preventDefault();
-            storage.deleteDataByIndex(key, cardId);
-            await this.SubmitButtonlistener()
-            location.reload(); //todo changer location.reload()
-        })
-        this.form.append(modifyButton, cancelButton)
+            const { isValid, values, storageUpdates } = this.collectAndValidateFormFields();
+            if (!isValid) {
+                this.form.reportValidity();
+                return;
+            }
+            const newData = storage.structureDataToStore(values);
+            const data = storage.getDataFromLocalStorage(key);
+            data[cardId] = newData;
+            localStorage.setItem(key, JSON.stringify(data));
+            storage.updateLocalStorage(storageUpdates);
+            location.reload();
+        });
+        this.form.append(modifyButton, cancelButton);
     }
+
 
 
 };
