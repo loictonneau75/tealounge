@@ -116,13 +116,21 @@ export class TeaForm {
         return { isValid: formValid, values, storageUpdates };
     };
 
-    prefillForm(data) {
+    prefillForm(data, fieldMap) {
+        console.log("Données reçues pour pré-remplissage :", data);
+        console.log("Clés disponibles dans fieldMap :", Object.keys(fieldMap));
         Object.entries(data).forEach(([fieldName, value]) => {
-            const fieldDef = this.fieldMap[fieldName.toLowerCase()];
-            if (!fieldDef) return;
-
+            const fieldDef = fieldMap[fieldName.toLowerCase()];
+            if (!fieldDef) {
+                console.warn(`Champ "${fieldName}" introuvable dans fieldMap.`);
+                return
+            };
             const input = document.getElementById(fieldDef.id);
-            if (!input) return;
+            if (!input) {
+                console.warn(`Élément DOM introuvable pour l'id "${fieldDef.id}"`);
+                return;
+            }
+            console.log(`Pré-remplissage du champ "${fieldName}" (id: "${fieldDef.id}") avec la valeur :`, value);
 
             // Texte ou textarea
             if (input.tagName === "INPUT" || input.tagName === "TEXTAREA") {

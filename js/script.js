@@ -40,9 +40,10 @@ function setupDoc(sitename){
  * @returns {HTMLElement} The main wrapper element containing all page sections.
  */
 function createPage(config, lang){
+    let form
     const flagDiv = chooseLang(config, lang);
-    const formWrapper = createForm(config, lang)
-    const carouselWrapper = createCarousel(config, lang)
+    const formWrapper = createForm(config, lang, form)
+    const carouselWrapper = createCarousel(config, lang, form)
     const MainWrapper = dom_helpers.createCustomElement({tag:"div"})
     MainWrapper.append(flagDiv, formWrapper, carouselWrapper);
     return MainWrapper;
@@ -57,13 +58,13 @@ function createPage(config, lang){
  * @param {string} lang - The selected language code for localization.
  * @returns {HTMLElement} A DOM element containing the carousel and its title.
  */
-function createCarousel(config, lang){
+function createCarousel(config, lang, form){
     const title = dom_helpers.createCustomElement({tag: "h2", innerText: utils.capitalize(`${config.UILabels[lang].yours} ${config.object[lang]}`), classList: ["h2"]});
     const wrapper = dom_helpers.createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5",]})
-    wrapper.append(title, new Carousel.Carousel(new Cards.Cards(config, lang)))
+    wrapper.append(title, new Carousel.Carousel(new Cards.Cards(config, lang), form))
     window.addEventListener("resize", () => {
         wrapper.innerHTML = ""
-        wrapper.append(title, new Carousel.Carousel(new Cards.Cards(config, lang)))
+        wrapper.append(title, new Carousel.Carousel(new Cards.Cards(config, lang), from))
     })
     return wrapper
 }
@@ -76,10 +77,10 @@ function createCarousel(config, lang){
  * @param {string} lang - The selected language code for rendering the form in the correct language.
  * @returns {HTMLElement} A DOM element containing the form layout.
  */
-function createForm(config, lang){
+function createForm(config, lang, form){
     const title = dom_helpers.createCustomElement({tag: "h1", innerText: utils.toLineBreak(config.siteName), classList: ["text-center", "display-custom"]});
     const wrapper = dom_helpers.createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5"]});
-    const form = new TeaForm.TeaForm(lang, config)
+    form = new TeaForm.TeaForm(lang, config)
     wrapper.append(title, form.getForm());
     return wrapper
 }

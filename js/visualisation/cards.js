@@ -16,7 +16,8 @@ export class Cards {
      * @param {string} lang - The selected language code for localization.
      * 
      */
-    constructor(config, lang){
+    constructor(config, lang, form){
+        this.form = form
         this.config = config;
         this.lang = lang
         this.cards = [];
@@ -111,7 +112,7 @@ export class Cards {
                 console.log("Édition de la carte #", cardId, teaToEdit);;
                 card.remove()
                 const formInstance = new teaForm.TeaForm(this.lang, this.config);
-                formInstance.prefillForm(teaToEdit)
+                formInstance.prefillForm(teaToEdit, this.fieldMap)
                 parent.appendChild(formInstance.getForm());
             } else if (e.target.classList.contains("btn-delete")) {
                 console.log(`🗑️ Supprimer la carte #${cardId}`);
