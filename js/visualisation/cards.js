@@ -1,6 +1,7 @@
 import * as domHelpers from "../utils/dom_helpers.js";
 import * as storage from "../utils/storage.js";
 import * as utils from "../utils/utils.js"
+import * as teaForm from "../form/tea_form.js"
 
 /**
  * Class responsible for generating HTML cards from a configuration object
@@ -102,15 +103,18 @@ export class Cards {
         carousel.addEventListener("click", (e) => {
             const card = e.target.closest(".card");
             if (!card) return;
-
             const cardId = parseInt(card.dataset.cardId);
-
+            const key = this.config.object.en;
+            const teaToEdit = storage.getDataFromLocalStorage(key)[cardId];
             if (e.target.classList.contains("btn-edit")) {
-                console.log(`🛠️ Éditer la carte #${cardId}`);
-                // this.editCard(cardId); (à implémenter)
+                const parent = card.parentElement
+                console.log("Édition de la carte #", cardId, teaToEdit);;
+                card.remove()
+                const formInstance = new teaForm.TeaForm(this.lang, this.config);
+                formInstance.prefillForm(teaToEdit)
+                parent.appendChild(formInstance.getForm());
             } else if (e.target.classList.contains("btn-delete")) {
                 console.log(`🗑️ Supprimer la carte #${cardId}`);
-                const key = this.config.object.en;
                 storage.deleteDataByIndex(key, cardId);
                 location.reload();
             }

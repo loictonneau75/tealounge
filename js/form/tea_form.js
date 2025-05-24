@@ -23,8 +23,11 @@ export class TeaForm {
         this.UILabels = config.UILabels[this.lang];
         this.form = dom_helpers.createCustomElement({ tag: "form", autocomplete: "off" });
         this.buildForm()
-        return this.form;
     };
+
+    getForm(){
+        return this.form;
+    }
 
     buildForm(){
         const rows = this.fields.map(fields => this.buildFieldRow(fields));
@@ -112,4 +115,37 @@ export class TeaForm {
         });
         return { isValid: formValid, values, storageUpdates };
     };
+
+    prefillForm(data) {
+        Object.entries(data).forEach(([fieldName, value]) => {
+            const fieldDef = this.fieldMap[fieldName.toLowerCase()];
+            if (!fieldDef) return;
+
+            const input = document.getElementById(fieldDef.id);
+            if (!input) return;
+
+            // Texte ou textarea
+            if (input.tagName === "INPUT" || input.tagName === "TEXTAREA") {
+                input.value = Array.isArray(value) ? value.join(", ") : value;
+            }
+
+            // multipleChoice (avec choiceId)
+            if (fieldDef.choiceId && Array.isArray(value)) {
+                const container = document.getElementById(fieldDef.choiceId);
+                if (container) {
+                    const capitalized = value.map(v => v.charAt(0).toUpperCase() + v.slice(1));
+                    field_behaviors.displaySelectedChoices(capitalized, container);
+                }
+            }
+
+            // oneChoice avec champ "other"
+            if (fieldDef.otherId && typeof value === "string") {
+                const otherInput = document.getElementById(fieldDef.otherId);
+                const isOther = otherInput && input.value === this.UILabels.other;
+                if (isOther) otherInput.value = value;
+            }
+        });
+    }
+
+
 };

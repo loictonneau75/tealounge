@@ -31,7 +31,6 @@ export class Carousel{
         this.initDOM();
         if (this.options.infinite) this.setupInfiniteScroll();
         this.track.append(...this.slides);
-        console.log(this.slides[0])
         this.cardInstance.setupSlidesActionButtonDelegation(this.track);
         this.setStyle();
         this.createNavigation();
