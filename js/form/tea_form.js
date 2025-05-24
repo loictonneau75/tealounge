@@ -143,6 +143,7 @@ export class TeaForm {
                 if (container) {
                     const capitalized = value.map(v => v.charAt(0).toUpperCase() + v.slice(1));
                     field_behaviors.displaySelectedChoices(capitalized, container);
+                    input.value = ""
                 }
             }
 

@@ -110,10 +110,9 @@ export class Cards {
             if (e.target.classList.contains("btn-edit")) {
                 const parent = card.parentElement
                 console.log("Édition de la carte #", cardId, teaToEdit);;
-                card.remove()
+                //card.remove()
                 const formInstance = new teaForm.TeaForm(this.lang, this.config);
                 formInstance.prefillForm(teaToEdit, this.fieldMap)
-                parent.appendChild(formInstance.getForm());
             } else if (e.target.classList.contains("btn-delete")) {
                 console.log(`🗑️ Supprimer la carte #${cardId}`);
                 storage.deleteDataByIndex(key, cardId);

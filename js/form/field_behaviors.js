@@ -240,7 +240,7 @@ function finalizeSelection(input,wrapper, state, selected, otherInput, other){
  * @param {string[]} selectedChoices - The array of selected items to display.
  * @param {HTMLElement} choiceContainer - The container in which the badges will be rendered.
  */
-function displaySelectedChoices(selectedChoices, choiceContainer){
+export function displaySelectedChoices(selectedChoices, choiceContainer){
     choiceContainer.innerHTML = "";
     selectedChoices.forEach((ingredient, index) => {
         const pill = dom_helpers.createCustomElement({tag: "span", textContent: ingredient, classList:["badge", "bg-custom-secondary", "rounded-pill"]});
