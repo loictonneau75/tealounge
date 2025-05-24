@@ -77,6 +77,13 @@
             }
         }
     }],
+    "Carousel":{
+        "slidesToScroll": 1,
+        "slidesVisible": 3,
+        "loop": false,
+        "infinite": true,
+        "slideIndicator": true
+    },
     "UILabels":{
         "fr":{
             "flag": "img/flag/fr.svg",

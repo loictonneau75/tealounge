@@ -18,9 +18,9 @@ export class Carousel{
      * @returns {HTMLElement} The outer carousel wrapper element.
      */
     //todo changer le jsdoc
-    constructor(cardInstance, options = {slidesToScroll: 1, slidesVisible: 3, loop: false, slideIndicator: true, infinite: true}) {
+    constructor(config, cardInstance) {
         this.cardInstance = cardInstance
-        this.options = options;
+        this.options = config.Carousel;
         this.slides = cardInstance.getCards();
         this.currentSlide = 0;
         this.moveCallBacks = [];
