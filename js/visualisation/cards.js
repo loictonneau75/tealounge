@@ -107,9 +107,9 @@ export class Cards {
             const key = this.config.object.en;
             const teaToEdit = storage.getDataFromLocalStorage(key)[cardId];
             if (e.target.classList.contains("btn-edit")) {
-                const parent = card.parentElement
+                window.scrollTo({top: 0,behavior: "smooth"});
                 this.form.prefillForm(teaToEdit, this.fieldMap)
-                this.form.changeButton()
+                this.form.changeButton(key, cardId)
             } else if (e.target.classList.contains("btn-delete")) {
                 storage.deleteDataByIndex(key, cardId);
                 location.reload();

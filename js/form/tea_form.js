@@ -32,7 +32,11 @@ export class TeaForm {
     buildForm(){
         const rows = this.fields.map(fields => this.buildFieldRow(fields));
         this.submitBtn = dom_helpers.createCustomElement({tag: "button", type: "submit", textContent: this.UILabels.send, classList: ["btn", "btn-custom-secondary", "mt-3"]});
-        this.SubmitButtonlistener()
+        this.submitBtn.addEventListener("click", async event => {
+            event.preventDefault();
+            await this.SubmitButtonlistener()
+            location.reload(); //todo changer location.reload()
+        });
         rows.push(this.submitBtn);
         this.form.append(...rows);
     }
@@ -70,18 +74,14 @@ export class TeaForm {
         else return dom_helpers.createInputField(field.id, labelText, placeholder);
     };
 
-    SubmitButtonlistener(){
-        this.submitBtn.addEventListener("click", async event => {
-            event.preventDefault();
-            const {isValid, values, storageUpdates} = this.collectAndValidateFormFields();
+    async SubmitButtonlistener(){
+        const {isValid, values, storageUpdates} = this.collectAndValidateFormFields();
             if (!isValid){
                 this.form.reportValidity();
                 return;
             };
             await storage.storeDataIfNew(storage.structureDataToStore(values), this.object);
             storage.updateLocalStorage(storageUpdates);
-            location.reload(); //todo changer location.reload()
-        });
     }
 
     /**
@@ -134,12 +134,17 @@ export class TeaForm {
         });
     }
 
-    changeButton(){
-        this.submitBtn.remove()
-        const modifyButton = dom_helpers.createCustomElement({tag: "button", type: "submit", textContent: this.UILabels.edit || "Modifier", classList: ["btn", "btn-custom-secondary", "m-1", "mt-3"]});
-        const cancelButton = dom_helpers.createCustomElement({tag: "button", type: "button", textContent: this.UILabels.cancel || "Annuler", classList: ["btn", "btn-custom-secondary", "m-1", "mt-3"]});
+    changeButton(key, cardId){
+    this.submitBtn.remove()
+        const modifyButton = dom_helpers.createCustomElement({tag: "button", type: "submit", textContent: this.UILabels.edit, classList: ["btn", "btn-custom-secondary", "m-1", "mt-3"]});
+        const cancelButton = dom_helpers.createCustomElement({tag: "button", type: "button", textContent: this.UILabels.cancel, classList: ["btn", "btn-custom-secondary", "m-1", "mt-3"]});
         cancelButton.addEventListener("click", () => {location.reload()})//todo changer location.reload()
-        
+        modifyButton.addEventListener("click", async(e) => {
+            e.preventDefault();
+            storage.deleteDataByIndex(key, cardId);
+            await this.SubmitButtonlistener()
+            location.reload(); //todo changer location.reload()
+        })
         this.form.append(modifyButton, cancelButton)
     }
 

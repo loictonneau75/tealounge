@@ -86,8 +86,9 @@
             "errormsg": "Merci d'insérer une valeur.",
             "other": "Autre",
             "yours" : "vos",
-            "delete": "Suprimé",
-            "edit": "Modifié"
+            "delete": "Suprimer",
+            "edit": "Modifier",
+            "cancel" : "Annuler"
         },
         "en":{
             "flag": "img/flag/eng.svg",
@@ -98,7 +99,8 @@
             "other": "Other",
             "yours" : "your",
             "delete": "Delete",
-            "edit": "Edit"
+            "edit": "Edit",
+            "cancel" : "Cancel"
         }
         }
 
