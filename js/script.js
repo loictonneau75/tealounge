@@ -40,9 +40,8 @@ function setupDoc(sitename){
  * @returns {HTMLElement} The main wrapper element containing all page sections.
  */
 function createPage(config, lang){
-    let form
     const flagDiv = chooseLang(config, lang);
-    const formWrapper = createForm(config, lang, form)
+    const { wrapper: formWrapper, form } = createForm(config, lang);
     const carouselWrapper = createCarousel(config, lang, form)
     const MainWrapper = dom_helpers.createCustomElement({tag:"div"})
     MainWrapper.append(flagDiv, formWrapper, carouselWrapper);
@@ -64,7 +63,7 @@ function createCarousel(config, lang, form){
     wrapper.append(title, new Carousel.Carousel(new Cards.Cards(config, lang), form))
     window.addEventListener("resize", () => {
         wrapper.innerHTML = ""
-        wrapper.append(title, new Carousel.Carousel(new Cards.Cards(config, lang), from))
+        wrapper.append(title, new Carousel.Carousel(new Cards.Cards(config, lang), form))
     })
     return wrapper
 }
@@ -77,12 +76,13 @@ function createCarousel(config, lang, form){
  * @param {string} lang - The selected language code for rendering the form in the correct language.
  * @returns {HTMLElement} A DOM element containing the form layout.
  */
-function createForm(config, lang, form){
+function createForm(config, lang){
     const title = dom_helpers.createCustomElement({tag: "h1", innerText: utils.toLineBreak(config.siteName), classList: ["text-center", "display-custom"]});
     const wrapper = dom_helpers.createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5"]});
-    form = new TeaForm.TeaForm(lang, config)
+    const form = new TeaForm.TeaForm(lang, config)
+    console.log(form)
     wrapper.append(title, form.getForm());
-    return wrapper
+    return {wrapper, form}
 }
 
 /**

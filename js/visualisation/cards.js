@@ -109,12 +109,12 @@ export class Cards {
             const teaToEdit = storage.getDataFromLocalStorage(key)[cardId];
             if (e.target.classList.contains("btn-edit")) {
                 const parent = card.parentElement
-                console.log("Édition de la carte #", cardId, teaToEdit);;
+                //console.log("Édition de la carte #", cardId, teaToEdit);;
+                //console.log(this.form)
                 //card.remove()
-                const formInstance = new teaForm.TeaForm(this.lang, this.config);
-                formInstance.prefillForm(teaToEdit, this.fieldMap)
+                this.form.prefillForm(teaToEdit, this.fieldMap)
             } else if (e.target.classList.contains("btn-delete")) {
-                console.log(`🗑️ Supprimer la carte #${cardId}`);
+                //console.log(`🗑️ Supprimer la carte #${cardId}`);
                 storage.deleteDataByIndex(key, cardId);
                 location.reload();
             }

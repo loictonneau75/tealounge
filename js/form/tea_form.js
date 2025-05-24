@@ -30,8 +30,11 @@ export class TeaForm {
     }
 
     buildForm(){
+        console.log("[buildForm] Construction du formulaire"); 
         const rows = this.fields.map(fields => this.buildFieldRow(fields));
-        rows.push(this.buildSubmitButton());
+        this.submitBtn = dom_helpers.createCustomElement({tag: "button", type: "submit", textContent: this.UILabels.send, classList: ["btn", "btn-custom-secondary", "mt-3"]});
+        this.SubmitButtonlistener()
+        rows.push(this.submitBtn);
         this.form.append(...rows);
     }
 
@@ -68,14 +71,8 @@ export class TeaForm {
         else return dom_helpers.createInputField(field.id, labelText, placeholder);
     };
 
-    /**
-     * Creates the form's submit button and attaches a listener to validate and store the data.
-     *
-     * @returns {HTMLButtonElement} A configured submit button element.
-     */
-    buildSubmitButton(){
-        const submitBtn = dom_helpers.createCustomElement({tag: "button", type: "submit", textContent: this.UILabels.send, classList: ["btn", "btn-custom-secondary", "mt-3"]});
-        submitBtn.addEventListener("click", async event => {
+    SubmitButtonlistener(){
+        this.submitBtn.addEventListener("click", async event => {
             event.preventDefault();
             const {isValid, values, storageUpdates} = this.collectAndValidateFormFields();
             if (!isValid){
@@ -86,8 +83,7 @@ export class TeaForm {
             storage.updateLocalStorage(storageUpdates);
             location.reload(); //todo changer location.reload()
         });
-        return submitBtn;
-    };
+    }
 
     /**
      * Validates all form fields, collects their values, and prepares updates for localStorage.
@@ -117,27 +113,13 @@ export class TeaForm {
     };
 
     prefillForm(data, fieldMap) {
-        console.log("Données reçues pour pré-remplissage :", data);
-        console.log("Clés disponibles dans fieldMap :", Object.keys(fieldMap));
+        console.log("[prefillForm] prefill du formulaire");
         Object.entries(data).forEach(([fieldName, value]) => {
             const fieldDef = fieldMap[fieldName.toLowerCase()];
-            if (!fieldDef) {
-                console.warn(`Champ "${fieldName}" introuvable dans fieldMap.`);
-                return
-            };
+            if (!fieldDef) return;
             const input = document.getElementById(fieldDef.id);
-            if (!input) {
-                console.warn(`Élément DOM introuvable pour l'id "${fieldDef.id}"`);
-                return;
-            }
-            console.log(`Pré-remplissage du champ "${fieldName}" (id: "${fieldDef.id}") avec la valeur :`, value);
-
-            // Texte ou textarea
-            if (input.tagName === "INPUT" || input.tagName === "TEXTAREA") {
-                input.value = Array.isArray(value) ? value.join(", ") : value;
-            }
-
-            // multipleChoice (avec choiceId)
+            if (!input) return;
+            if (input.tagName === "INPUT" || input.tagName === "TEXTAREA") input.value = Array.isArray(value) ? value.join(", ") : value;
             if (fieldDef.choiceId && Array.isArray(value)) {
                 const container = document.getElementById(fieldDef.choiceId);
                 if (container) {
@@ -146,8 +128,6 @@ export class TeaForm {
                     input.value = ""
                 }
             }
-
-            // oneChoice avec champ "other"
             if (fieldDef.otherId && typeof value === "string") {
                 const otherInput = document.getElementById(fieldDef.otherId);
                 const isOther = otherInput && input.value === this.UILabels.other;
