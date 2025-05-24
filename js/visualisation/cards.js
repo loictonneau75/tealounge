@@ -115,7 +115,7 @@ export class Cards {
                 location.reload();
             }
         });
-}
+    }
 
 
 }
