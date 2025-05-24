@@ -80,7 +80,6 @@ function createForm(config, lang){
     const title = dom_helpers.createCustomElement({tag: "h1", innerText: utils.toLineBreak(config.siteName), classList: ["text-center", "display-custom"]});
     const wrapper = dom_helpers.createCustomElement({tag: "div", classList: ["container", "bg-custom-primary", "p-5"]});
     const form = new TeaForm.TeaForm(lang, config)
-    console.log(form)
     wrapper.append(title, form.getForm());
     return {wrapper, form}
 }

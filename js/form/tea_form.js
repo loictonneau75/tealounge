@@ -30,7 +30,6 @@ export class TeaForm {
     }
 
     buildForm(){
-        console.log("[buildForm] Construction du formulaire"); 
         const rows = this.fields.map(fields => this.buildFieldRow(fields));
         this.submitBtn = dom_helpers.createCustomElement({tag: "button", type: "submit", textContent: this.UILabels.send, classList: ["btn", "btn-custom-secondary", "mt-3"]});
         this.SubmitButtonlistener()
@@ -113,7 +112,6 @@ export class TeaForm {
     };
 
     prefillForm(data, fieldMap) {
-        console.log("[prefillForm] prefill du formulaire");
         Object.entries(data).forEach(([fieldName, value]) => {
             const fieldDef = fieldMap[fieldName.toLowerCase()];
             if (!fieldDef) return;
