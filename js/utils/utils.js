@@ -11,7 +11,7 @@
  */
 export async function getConfigValue(){
     try{
-        const response = await fetch("../json/const.json");
+        const response = await fetch("/json/const.json");
         return await response.json();
     } catch(error){
         console.error("Erreur lors de la récupération du JSON : ", error);
