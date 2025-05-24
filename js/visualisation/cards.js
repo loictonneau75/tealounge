@@ -1,7 +1,6 @@
 import * as domHelpers from "../utils/dom_helpers.js";
 import * as storage from "../utils/storage.js";
 import * as utils from "../utils/utils.js"
-import * as teaForm from "../form/tea_form.js"
 
 /**
  * Class responsible for generating HTML cards from a configuration object
@@ -110,6 +109,7 @@ export class Cards {
             if (e.target.classList.contains("btn-edit")) {
                 const parent = card.parentElement
                 this.form.prefillForm(teaToEdit, this.fieldMap)
+                this.form.changeButton()
             } else if (e.target.classList.contains("btn-delete")) {
                 storage.deleteDataByIndex(key, cardId);
                 location.reload();

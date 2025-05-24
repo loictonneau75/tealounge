@@ -134,5 +134,9 @@ export class TeaForm {
         });
     }
 
+    changeButton(){
+        this.submitBtn.remove()
+    }
+
 
 };
