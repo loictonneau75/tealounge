@@ -1,4 +1,5 @@
 import * as domHelpers from "../utils/dom_helpers.js";
+import * as storage from "../utils/storage.js"
 
 /**
  * A responsive and optionally infinite carousel with pagination and navigation controls.
@@ -16,9 +17,10 @@ export class Carousel{
      * @throws {Error} If both `loop` and `infinite` are true.
      * @returns {HTMLElement} The outer carousel wrapper element.
      */
-    constructor(slides, options = {slidesToScroll: 1, slidesVisible: 3, loop: false, slideIndicator: true, infinite: true}) {
+    constructor(slides, config, options = {slidesToScroll: 1, slidesVisible: 3, loop: false, slideIndicator: true, infinite: true}) {
         this.options = options;
         this.slides = slides;
+        this.slidesConfig = config;
         this.currentSlide = 0;
         this.moveCallBacks = [];
         this.offset = 0;
@@ -28,6 +30,7 @@ export class Carousel{
         this.initDOM();
         if (this.options.infinite) this.setupInfiniteScroll();
         this.track.append(...this.slides);
+        this.setupSlidesActionButtonDelegation();
         this.setStyle();
         this.createNavigation();
         if (this.options.slideIndicator) this.createSlideIndicator();
@@ -78,6 +81,26 @@ export class Carousel{
         this.goToSlide(this.offset, false);
         this.track.addEventListener("transitionend", this.resetInfinite.bind(this));
     }
+
+    setupSlidesActionButtonDelegation() {
+        this.track.addEventListener("click", (e) => {
+            const card = e.target.closest(".card");
+            if (!card) return;
+            const cardId = card.dataset.cardId;
+            if (e.target.classList.contains("btn-edit")) {
+                console.log(`🛠️ Éditer la carte #${cardId}`);
+            } else if (e.target.classList.contains("btn-delete")) {
+                const key = this.slidesConfig?.object?.en;
+                if (key) {
+                    storage.deleteDataByIndex(key, cardId);
+                    location.reload(); //todo changer location.reload()
+                } else {
+                    console.warn("⚠️ Impossible de trouver la clé de stockage.");
+                }
+            }
+        });
+    }
+
 
     /**
      * Applies styles and dimensions to all slides based on the current configuration.
@@ -229,7 +252,7 @@ export class Carousel{
      * @private
      */
     onWindowResize(){
-        let mobile = window.innerWidth < 1200 //todo voir pour modifier la valeur, possibilité : 768, 992, 1200
+        let mobile = window.innerWidth < 768 //todo voir pour modifier la valeur, possibilité : 768, 992, 1200
         if (this.isMobile !== mobile){
             this.isMobile = mobile
             this.setStyle()

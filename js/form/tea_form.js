@@ -81,8 +81,7 @@ export class TeaForm {
             };
             await storage.storeDataIfNew(storage.structureDataToStore(values), this.object);
             storage.updateLocalStorage(storageUpdates);
-            //todo changer location.reload()
-            location.reload();
+            location.reload(); //todo changer location.reload()
         });
         return submitBtn;
     };

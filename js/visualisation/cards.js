@@ -29,26 +29,24 @@ export class Cards {
      * The cards are stored in the `this.cards` array.
      */
     buildcard(){
-        storage.getDataFromLocalStorage(this.config.object.en).forEach(object => {
-            const cardDiv = domHelpers.createCustomElement({tag: "div"});
-            const card = domHelpers.createCustomElement({tag: "div", classList: ["card", "m-2"]});
+        storage.getDataFromLocalStorage(this.config.object.en).forEach((object, index) => {
+            const cardDiv = domHelpers.createCustomElement({tag: "div", classList: ["card-wrapper"]});
+            const card = domHelpers.createCustomElement({tag: "div", classList: ["card", "m-2"], attributes: { "data-card-id": index }});
             const sections = {
                 header : this.buildSection("header", object),
                 body: this.buildSection("body", object),
                 footer: this.buildSection("footer", object),
             };
             Object.values(sections).forEach(section => {card.appendChild(section)});
-            this.buildActionButton(sections.footer, object)
+            this.buildActionButton(sections.footer)
             cardDiv.appendChild(card);
             this.cards.push(cardDiv);
         });
     };
 
-    buildActionButton(footer, object){
-        const deleteBtn = domHelpers.createCustomElement({tag: "button", innerText: this.config.UILabels[this.lang].delete, classList: ["btn", "btn-custom-secondary", "m-1"]})
-        const editBtn = domHelpers.createCustomElement({tag: "button", innerText: this.config.UILabels[this.lang].edit, classList: ["btn", "btn-custom-secondary", "m-1"]})
-        deleteBtn.addEventListener("click", () => this.deleteCard(object))
-        editBtn.addEventListener("click", () => this.editCard())
+    buildActionButton(footer){
+        const deleteBtn = domHelpers.createCustomElement({tag: "button", innerText: this.config.UILabels[this.lang].delete, classList: ["btn", "btn-custom-secondary", "m-1", "btn-delete"]})
+        const editBtn = domHelpers.createCustomElement({tag: "button", innerText: this.config.UILabels[this.lang].edit, classList: ["btn", "btn-custom-secondary", "m-1", "btn-edit"]})
         footer.append(deleteBtn, editBtn)
     }
 

@@ -57,3 +57,16 @@ export function storeDataIfNew(dataToStore, key){
         localStorage.setItem(key, JSON.stringify(existingData));
     };
 };
+
+/**
+ * Supprime une entrée dans localStorage par son index.
+ * @param {string} key - La clé de localStorage.
+ * @param {number} index - L'index de l'élément à supprimer.
+ */
+export function deleteDataByIndex(key, index) {
+    const allData = JSON.parse(localStorage.getItem(key)) || [];
+    if (index < 0 || index >= allData.length) return;
+    allData.splice(index, 1);
+    localStorage.setItem(key, JSON.stringify(allData));
+}
+
