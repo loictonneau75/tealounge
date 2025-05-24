@@ -17,10 +17,11 @@ export class Carousel{
      * @throws {Error} If both `loop` and `infinite` are true.
      * @returns {HTMLElement} The outer carousel wrapper element.
      */
-    constructor(slides, config, options = {slidesToScroll: 1, slidesVisible: 3, loop: false, slideIndicator: true, infinite: true}) {
+    //todo changer le jsdoc
+    constructor(cardInstance, options = {slidesToScroll: 1, slidesVisible: 3, loop: false, slideIndicator: true, infinite: true}) {
+        this.cardInstance = cardInstance
         this.options = options;
-        this.slides = slides;
-        this.slidesConfig = config;
+        this.slides = cardInstance.getCards();
         this.currentSlide = 0;
         this.moveCallBacks = [];
         this.offset = 0;
@@ -30,7 +31,8 @@ export class Carousel{
         this.initDOM();
         if (this.options.infinite) this.setupInfiniteScroll();
         this.track.append(...this.slides);
-        this.setupSlidesActionButtonDelegation();
+        console.log(this.slides[0])
+        this.cardInstance.setupSlidesActionButtonDelegation(this.track);
         this.setStyle();
         this.createNavigation();
         if (this.options.slideIndicator) this.createSlideIndicator();
@@ -81,26 +83,6 @@ export class Carousel{
         this.goToSlide(this.offset, false);
         this.track.addEventListener("transitionend", this.resetInfinite.bind(this));
     }
-
-    setupSlidesActionButtonDelegation() {
-        this.track.addEventListener("click", (e) => {
-            const card = e.target.closest(".card");
-            if (!card) return;
-            const cardId = card.dataset.cardId;
-            if (e.target.classList.contains("btn-edit")) {
-                console.log(`🛠️ Éditer la carte #${cardId}`);
-            } else if (e.target.classList.contains("btn-delete")) {
-                const key = this.slidesConfig?.object?.en;
-                if (key) {
-                    storage.deleteDataByIndex(key, cardId);
-                    location.reload(); //todo changer location.reload()
-                } else {
-                    console.warn("⚠️ Impossible de trouver la clé de stockage.");
-                }
-            }
-        });
-    }
-
 
     /**
      * Applies styles and dimensions to all slides based on the current configuration.

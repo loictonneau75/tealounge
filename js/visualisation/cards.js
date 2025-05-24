@@ -13,7 +13,7 @@ export class Cards {
      * @param {Object[]} config.fields - Array of field definitions grouped by section.
      * @param {Object} config.object - Object containing localization keys (e.g. `en`) for localStorage access.
      * @param {string} lang - The selected language code for localization.
-     * @returns {HTMLElement[]} An array of generated card elements.
+     * 
      */
     constructor(config, lang){
         this.config = config;
@@ -21,8 +21,15 @@ export class Cards {
         this.cards = [];
         this.fieldMap = utils.buildFieldMapFromGroups(this.config.fields);
         this.buildcard();
-        return this.cards;
     };
+
+    /**
+     * Return an array of all cards
+     * @returns {HTMLElement[]} An array of generated card elements.
+     */
+    getCards() {
+        return this.cards;
+    }
 
     /**
      * Builds all card elements based on data from localStorage.
@@ -90,17 +97,25 @@ export class Cards {
         element.textContent = Array.isArray(value) ? value.join(", ") : value;
         return element;
     }
-    
-    deleteCard(object){
-        const key = this.config.object.en
-        const allTeas = storage.getDataFromLocalStorage(key);
-        const newTeas = allTeas.filter(t => JSON.stringify(t) !== JSON.stringify(object));
-        localStorage.setItem(key, JSON.stringify(newTeas));
-        //todo changer location.reload()
-        location.reload();
-    }
 
-    editCard(){
+    setupSlidesActionButtonDelegation(carousel) {
+        carousel.addEventListener("click", (e) => {
+            const card = e.target.closest(".card");
+            if (!card) return;
 
-    }
+            const cardId = parseInt(card.dataset.cardId);
+
+            if (e.target.classList.contains("btn-edit")) {
+                console.log(`🛠️ Éditer la carte #${cardId}`);
+                // this.editCard(cardId); (à implémenter)
+            } else if (e.target.classList.contains("btn-delete")) {
+                console.log(`🗑️ Supprimer la carte #${cardId}`);
+                const key = this.config.object.en;
+                storage.deleteDataByIndex(key, cardId);
+                location.reload();
+            }
+        });
+}
+
+
 }
