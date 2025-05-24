@@ -136,6 +136,9 @@ export class TeaForm {
 
     changeButton(){
         this.submitBtn.remove()
+        const modifyButton = dom_helpers.createCustomElement({tag: "button", type: "submit", textContent: this.UILabels.edit || "Modifier", classList: ["btn", "btn-custom-secondary", "m-1", "mt-3"]});
+        const cancelButton = dom_helpers.createCustomElement({tag: "button", type: "button", textContent: this.UILabels.cancel || "Annuler", classList: ["btn", "btn-custom-secondary", "m-1", "mt-3"]});
+        this.form.append(modifyButton, cancelButton)
     }
 
 
